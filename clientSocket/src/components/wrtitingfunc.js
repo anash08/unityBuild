@@ -23,7 +23,7 @@ import * as iink from 'iink-js';
 
 
 
-const socket = io("http://https://unitysocketwitqr.onrender.com")
+const socket = io("https://unitysocketwitqr.onrender.com")
 //............................///..................................//
 const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues, inputValue }) => {
 

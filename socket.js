@@ -20,14 +20,13 @@ app.use(cors({
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-app.use(cors);
 
 app.use(express.static(path.join(__dirname, './clientSocket/build')));
 
 // Generate a unique two-digit code for authentication
 const generateCode = () => {
-    const min = 1; // Minimum two-digit number
-    const max = 1; // Maximum two-digit number
+    const min = 10; // Minimum two-digit number
+    const max = 99; // Maximum two-digit number
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
@@ -63,13 +62,13 @@ io.on('connection', (socket) => {
 
 app.get("/", (req, res) => {
     console.log("Get request to Homepage");
-    res.send("Hiii sent by server...");
+    res.send("Hi, sent by server...");
 });
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, './clientSocket/build', 'index.html'));
 });
 
-server.listen(PORT, async () => {
+server.listen(PORT, () => {
     console.log(`Server initialized. Listening on PORT ${PORT}`);
 });

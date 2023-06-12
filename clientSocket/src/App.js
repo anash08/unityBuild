@@ -4,7 +4,7 @@ import './App.css';
 import ScientificKeyboard from './components/wrtitingfunc';
 import QRCode from 'react-qr-code';
 
-const socket = io('http://https://unitysocketwitqr.onrender.com');
+const socket = io('https://unitysocketwitqr.onrender.com');
 
 const App = () => {
   const [inputValue, setInputValue] = useState('');

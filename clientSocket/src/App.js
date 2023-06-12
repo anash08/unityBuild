@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 import ScientificKeyboard from './components/wrtitingfunc';
@@ -14,12 +14,20 @@ const App = () => {
   const [showEnterCode, setShowEnterCode] = useState(true);
 
   useEffect(() => {
+    const isAuthenticated = localStorage.getItem('authenticated');
+    if (isAuthenticated) {
+      setAuthenticated(true);
+      setShowEnterCode(false);
+    }
+
     socket.on('authenticationCode', (code) => {
       setAuthenticationCode(code);
     });
 
     socket.on('authenticated', () => {
       setAuthenticated(true);
+      setShowEnterCode(false);
+      localStorage.setItem('authenticated', true);
     });
 
     socket.on('invalidCode', () => {
@@ -36,17 +44,18 @@ const App = () => {
   };
 
   const handleSubmit = () => {
-    socket.emit('authenticate', inputValue);
+    if (showEnterCode) {
+      socket.emit('authenticate', inputValue);
+    }
   };
 
   const handleScan = (data) => {
     if (data === authenticationCode.toString()) {
       setAuthenticated(true);
       setShowEnterCode(false);
+      localStorage.setItem('authenticated', true);
     }
   };
-
-
 
   return (
     <div className="App">

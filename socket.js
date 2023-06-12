@@ -10,15 +10,17 @@ const io = socketIO(server);
 const PORT = process.env.PORT || 8000;
 
 app.use(cors({
-    origin: 'http://172.20.10.1',
+    origin: 'https://unitysocketbuild.onrender.com',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.use(cors({
-    origin: 'http://172.20.10.2:3000',
+    origin: 'http://192.168.1.15',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+app.use(cors({
 }));
 
 app.use(express.static(path.join(__dirname, './clientSocket/build')));

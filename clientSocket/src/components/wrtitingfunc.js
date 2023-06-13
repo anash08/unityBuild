@@ -74,7 +74,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
             }
             else if (exports && exports['application/mathml+xml']) {
                 convertElement.disabled = false;
-                resultElement.innerText = exports['application/mathml+xml'];
+                // resultElement.innerText = exports['application/mathml+xml'];
             } else if (exports && exports['application/mathofficeXML']) {
                 convertElement.disabled = false;
                 resultElement.innerText = exports['application/mathofficeXML'];
@@ -269,7 +269,8 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
         <div className="App">
             <div className="background" style={{ display: "-ms-flexbox" }}>
                 <h1>MATH!KEEBORED</h1>
-                <div id="codeDisplay"></div>
+                <div id="codeDisplay" style={{ position: "absolute", top: 0, right: 0 }}></div>
+
 
                 <div
                     id="result"
@@ -294,7 +295,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                     )}
                 </div>
             </div>
-            <div>
+            <div style={{ border: "1px solid black", padding: "10px" }}>
                 <nav
                     style={{
                         width: '100%',
@@ -355,9 +356,10 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                     >
                         Convert
                     </button>
-                    <div id="editor" className="editor" style={{ marginTop: "20px" }}>
+                    <div id="editor" className="editor" style={{ marginTop: "20px", padding: "10px" }}>
                         <h1 style={{ color: 'grey' }}>Write Here:</h1>
                     </div>
+
                 </nav>
             </div>
         </div>

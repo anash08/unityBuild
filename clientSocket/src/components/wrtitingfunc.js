@@ -266,7 +266,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
 
 
     return (
-        <div className="App">
+        <div >
             <div className="background" style={{ display: "-ms-flexbox" }}>
                 <h1>MATH!KEEBORED</h1>
                 <div id="codeDisplay" style={{ position: "absolute", top: 0, right: 0 }}></div>
@@ -356,7 +356,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                     >
                         Convert
                     </button>
-                    <div id="editor" className="editor" style={{ marginTop: "20px", padding: "10px" }}>
+                    <div id="editor" className="editor" style={{ marginTop: "20px", padding: "10px", color: "black" }}>
                         <h1 style={{ color: 'grey' }}>Write Here:</h1>
                     </div>
 

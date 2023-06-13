@@ -63,6 +63,7 @@ const App = () => {
         <div>
           <h1>Welcome to the Application</h1>
           <h2>Scan QR Code or Enter User Code to Access Scientific Keyboard</h2>
+          <QRCode value={`https://unitysocketbuild.onrender.com=${authenticationCode}`} />
           <input
             type="text"
             value={inputValue}
@@ -96,7 +97,6 @@ const App = () => {
       )}
 
       {/* Render the QR code */}
-      <QRCode value={`http://172.20.10.2:8000?code=${authenticationCode}`} />
     </div>
   );
 };

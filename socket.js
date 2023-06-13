@@ -3,6 +3,7 @@ const http = require('http');
 const socketIO = require('socket.io');
 const path = require('path');
 const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
 const server = http.createServer(app);
@@ -46,16 +47,29 @@ io.on('connection', (socket) => {
 
     socket.on('convertedValue', (convertedValue) => {
         socket.broadcast.emit('convertedValue', convertedValue);
-        console.log("convertedValue.........//", convertedValue);
-    });
-    socket.on('clearScreen', () => {
-        socket.broadcast.emit('clearScreen');
+
+        // Send the converted value as a webhook to a specific URL
+        sendWebhook(convertedValue);
     });
 
     socket.on('disconnect', () => {
         console.log('A user disconnected');
     });
 });
+
+// Function to send the converted value as a webhook to a specific URL
+function sendWebhook(convertedValue) {
+    // Make an HTTP request to the webhook URL
+    // Replace 'https://example.com/webhook' with your webhook URL
+    const webhookURL = 'https://webhookforunity.onrender.com';
+    axios.post(webhookURL, { convertedValue })
+        .then(response => {
+            console.log('Webhook sent successfully');
+        })
+        .catch(error => {
+            console.error('Error sending webhook:', error);
+        });
+}
 
 app.get("/", (req, res) => {
     console.log("Get request to Homepage");

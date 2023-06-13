@@ -290,7 +290,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
     return (
         <div >
             <div className="background" style={{ display: "-ms-flexbox" }}>
-                <h1>MATHKEYBOARD</h1>
+                <h1 style={{ backgroundColor: "beige" }}>MATHKEYBOARD</h1>
                 <div id="codeDisplay" style={{ position: "absolute", top: 0, right: 0 }}></div>
 
 
@@ -304,7 +304,8 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                         alignItems: 'center',
                         justifyContent: 'center',
                         color: 'white',
-                        fontSize: '40px'
+                        fontSize: '40px',
+                        border: "10px solid beige"
                     }}
                 >
                     {convertedValues && (
@@ -317,7 +318,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                     )}
                 </div>
             </div>
-            <div style={{ border: "1px solid black", padding: "10px" }}>
+            <div style={{ border: "10px solid black", padding: "10px" }}>
                 <nav
                     style={{
                         width: '100%',
@@ -335,13 +336,18 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                             style={{
                                 backgroundColor: '#0383be',
                                 boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
-                                padding: '10px', // Add padding here
+                                padding: '5px', // Add padding here to increase the size of the button
+                                border: '2px solid black',
+                                display: 'flex', // Enable flexbox for button content alignment
+                                alignItems: 'center', // Align the icon vertically
+                                justifyContent: 'center', // Align the icon horizontally
                             }}
                             className="nav-btn btn-fab-mini btn-neonBlue"
                             disabled
                         >
-                            <DeleteIcon />
+                            <DeleteIcon style={{ width: '100%', height: '100%' }} />
                         </button>
+
 
                         <button
                             id="undo"
@@ -350,7 +356,8 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                             style={{
                                 backgroundColor: '#0383be',
                                 boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
-                                padding: '10px', // Add padding here
+                                padding: '5px', // Add padding here to increase the size of the button
+                                border: '2px solid black',
                             }}
                         ></button>
                         <button
@@ -360,7 +367,8 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                             style={{
                                 backgroundColor: '#0383be',
                                 boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
-                                padding: '10px', // Add padding here
+                                padding: '5px', // Add padding here to increase the size of the button
+                                border: '2px solid black',
                             }}
                         ></button>
                     </div>
@@ -372,7 +380,8 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                         style={{
                             backgroundColor: '#0383be',
                             boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
-                            padding: '10px', // Add padding here
+                            padding: '15px', // Add padding here to increase the size of the button
+                            border: '2px solid black',
                         }}
                         disabled
                     >

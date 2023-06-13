@@ -1,31 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import ScientificKeyboard from './components/wrtitingfunc';
+import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
+import './App.css';
 import QRCode from 'react-qr-code';
 import { QrReader } from 'react-qr-reader';
-import ScientificKeyboard from './components/wrtitingfunc';
+
+const socket = io('https://unitysocketbuild.onrender.com');
+const url = 'https://unitysocketbuild.onrender.com';
+
 
 const App = () => {
+  const [inputValue, setInputValue] = useState('');
+  const [convertedValues, setConvertedValues] = useState([]);
   const [authenticated, setAuthenticated] = useState(false);
+  const [authenticationCode, setAuthenticationCode] = useState('');
   const [showEnterCode, setShowEnterCode] = useState(true);
-  const [scannedUrl, setScannedUrl] = useState('');
 
   useEffect(() => {
-    const storedAuthenticated = localStorage.getItem('authenticated');
-    if (storedAuthenticated) {
+    const isAuthenticated = localStorage.getItem('authenticated');
+    if (isAuthenticated) {
       setAuthenticated(true);
       setShowEnterCode(false);
     }
+
+    socket.on('authenticationCode', (code) => {
+      setAuthenticationCode(code);
+    });
+
+    socket.on('authenticated', () => {
+      setAuthenticated(true);
+      setShowEnterCode(false);
+      localStorage.setItem('authenticated', true);
+    });
+
+    socket.on('invalidCode', () => {
+      alert('Invalid authentication code. Please try again.');
+    });
   }, []);
 
+  const handleInput = (symbol) => {
+    setInputValue((prevInputValue) => prevInputValue + symbol);
+  };
+
+  const handleConvertedValue = (convertedValue) => {
+    setConvertedValues((prevConvertedValues) => [...prevConvertedValues, convertedValue]);
+  };
+
+  const handleError = (error) => {
+    console.error(error);
+  };
   const handleScan = (data) => {
     if (data) {
-      setScannedUrl(data);
+      setAuthenticationCode(data); // Save the scanned URL
     }
   };
 
-  const handleClickUrl = () => {
+  const handleClickURL = () => {
     const enteredCode = prompt('Enter secret key');
     if (enteredCode === '1234') {
-      window.open(scannedUrl);
+      window.open(authenticationCode); // Open the URL
       setAuthenticated(true);
       setShowEnterCode(false);
       localStorage.setItem('authenticated', true);
@@ -40,32 +73,42 @@ const App = () => {
         <div>
           <h1>Welcome to the Application</h1>
           <h2>Scan QR Code or Enter User Code to Access Scientific Keyboard</h2>
-          <QRCode value="https://unitysocketbuild.onrender.com" />
+          <QRCode value={url.toString()} />
         </div>
       )}
 
       {!authenticated && !showEnterCode && (
         <div>
           <h1>Scanning QR Code...</h1>
-          <QrReader delay={300} onError={console.error} onScan={handleScan} />
+          {/* Render the QR code scanner component */}
+          <QrReader delay={300} onError={handleError} onScan={handleScan} />
         </div>
       )}
 
       {authenticated && (
         <>
-          <ScientificKeyboard />
+          <ScientificKeyboard
+            name="converted"
+            display="flex"
+            handleInput={handleInput}
+            handleConvertedValue={handleConvertedValue}
+          />
+
           {/* Other JSX code */}
-          <h1>Converted Values</h1>
+          <h1>{convertedValues}</h1>
         </>
       )}
 
-      {scannedUrl && (
+      {/* Show the scanned URL and handle click */}
+      {authenticationCode && (
         <div>
           <h2>Scanned URL:</h2>
-          <p>{scannedUrl}</p>
-          <button onClick={handleClickUrl}>Open URL</button>
+          <p>{authenticationCode}</p>
+          <button onClick={handleClickURL}>Open URL</button>
         </div>
       )}
+
+      {/* Render the QR code */}
     </div>
   );
 };

@@ -22,7 +22,7 @@ app.use(express.static(path.resolve(__dirname, 'clientSocket', 'build')));
 // Initialize session middleware
 app.use(
     session({
-        secret: 'your-secret-key',
+        secret: '1234',
         resave: false,
         saveUninitialized: true
     })

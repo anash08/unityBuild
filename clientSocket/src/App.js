@@ -44,25 +44,25 @@ const App = () => {
     setConvertedValues((prevConvertedValues) => [...prevConvertedValues, convertedValue]);
   };
 
-  const handleSubmit = () => {
-    if (showEnterCode) {
-      const enteredCode = prompt('Enter secret key');
-      socket.emit('authenticate', enteredCode);
-    }
-  };
-
   const handleError = (error) => {
     console.error(error);
   };
 
   const handleScan = (data) => {
-    const enteredCode = prompt('Enter secret key');
-    if (data === authenticationCode.toString() && enteredCode === 'YOUR_SECRET_KEY') {
-      setAuthenticated(true);
-      setShowEnterCode(false);
-      localStorage.setItem('authenticated', true);
+    if (data) {
+      const enteredCode = prompt('Enter secret key');
+      if (enteredCode === '1234') {
+        window.open(data); // Open the URL
+        setAuthenticated(true);
+        setShowEnterCode(false);
+        localStorage.setItem('authenticated', true);
+      } else {
+        alert('Invalid secret key. Please try again.');
+      }
     }
   };
+
+  const url = "https://unitysocketbuild.onrender.com"
 
   return (
     <div className="App">
@@ -70,14 +70,7 @@ const App = () => {
         <div>
           <h1>Welcome to the Application</h1>
           <h2>Scan QR Code or Enter User Code to Access Scientific Keyboard</h2>
-          <QRCode value={authenticationCode.toString()} />
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Enter code"
-          />
-          <button onClick={handleSubmit}>Submit</button>
+          <QRCode value={url.toString()} onClick={url} />
         </div>
       )}
 

@@ -6,6 +6,8 @@ import QRCode from 'react-qr-code';
 import { QrReader } from 'react-qr-reader';
 
 const socket = io('https://unitysocketbuild.onrender.com');
+const url = 'https://unitysocketbuild.onrender.com';
+
 
 const App = () => {
   const [inputValue, setInputValue] = useState('');
@@ -47,22 +49,23 @@ const App = () => {
   const handleError = (error) => {
     console.error(error);
   };
-
   const handleScan = (data) => {
     if (data) {
-      const enteredCode = prompt('Enter secret key');
-      if (enteredCode === '1234') {
-        window.open(data); // Open the URL
-        setAuthenticated(true);
-        setShowEnterCode(false);
-        localStorage.setItem('authenticated', true);
-      } else {
-        alert('Invalid secret key. Please try again.');
-      }
+      setAuthenticationCode(data); // Save the scanned URL
     }
   };
 
-  const url = "https://unitysocketbuild.onrender.com"
+  const handleClickURL = () => {
+    const enteredCode = prompt('Enter secret key');
+    if (enteredCode === '1234') {
+      window.open(authenticationCode); // Open the URL
+      setAuthenticated(true);
+      setShowEnterCode(false);
+      localStorage.setItem('authenticated', true);
+    } else {
+      alert('Invalid secret key. Please try again.');
+    }
+  };
 
   return (
     <div className="App">
@@ -70,7 +73,7 @@ const App = () => {
         <div>
           <h1>Welcome to the Application</h1>
           <h2>Scan QR Code or Enter User Code to Access Scientific Keyboard</h2>
-          <QRCode value={url.toString()} onClick={url} />
+          <QRCode value={url.toString()} />
         </div>
       )}
 
@@ -94,6 +97,15 @@ const App = () => {
           {/* Other JSX code */}
           <h1>{convertedValues}</h1>
         </>
+      )}
+
+      {/* Show the scanned URL and handle click */}
+      {authenticationCode && (
+        <div>
+          <h2>Scanned URL:</h2>
+          <p>{authenticationCode}</p>
+          <button onClick={handleClickURL}>Open URL</button>
+        </div>
       )}
 
       {/* Render the QR code */}

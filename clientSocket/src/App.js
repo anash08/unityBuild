@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 import QRCode from 'react-qr-code';
+import { QrReader } from 'react-qr-reader';
 
 const socket = io('https://unitysocketbuild.onrender.com');
 
@@ -45,12 +46,18 @@ const App = () => {
 
   const handleSubmit = () => {
     if (showEnterCode) {
-      socket.emit('authenticate', inputValue);
+      const enteredCode = prompt('Enter secret key');
+      socket.emit('authenticate', enteredCode);
     }
   };
 
+  const handleError = (error) => {
+    console.error(error);
+  };
+
   const handleScan = (data) => {
-    if (data === authenticationCode.toString()) {
+    const enteredCode = prompt('Enter secret key');
+    if (data === authenticationCode.toString() && enteredCode === 'YOUR_SECRET_KEY') {
       setAuthenticated(true);
       setShowEnterCode(false);
       localStorage.setItem('authenticated', true);
@@ -63,7 +70,7 @@ const App = () => {
         <div>
           <h1>Welcome to the Application</h1>
           <h2>Scan QR Code or Enter User Code to Access Scientific Keyboard</h2>
-          <QRCode value={`https://unitysocketbuild.onrender.com=${authenticationCode}`} />
+          <QRCode value={authenticationCode.toString()} />
           <input
             type="text"
             value={inputValue}
@@ -78,7 +85,7 @@ const App = () => {
         <div>
           <h1>Scanning QR Code...</h1>
           {/* Render the QR code scanner component */}
-          {/* <QrReader delay={300} onError={handleError} onScan={handleScan} /> */}
+          <QrReader delay={300} onError={handleError} onScan={handleScan} />
         </div>
       )}
 

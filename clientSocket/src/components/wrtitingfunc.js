@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Button, Grid, MenuItem, Select, Tooltip } from '@mui/material';
+import { Button, Divider, Grid, MenuItem, Select, Tooltip } from '@mui/material';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import axios from "axios";
 import katex from 'katex';
@@ -266,23 +266,39 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
 
 
     return (
+        <div className="App">
+            <div className="background" style={{ display: "-ms-flexbox" }}>
+                <h1>MATH!KEEBORED</h1>
+                <div id="codeDisplay"></div>
 
-        <div style={{ display: "-ms-flexbox" }}>
-            <h1>MATH!KEEBORED</h1>
-            <div id="result" style={{ backgroundColor: 'lightgrey', height: '300px', display: "-ms-flexbox", fontSize: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{/* Inner Text */}latex value:{convertedValues && (
-                <div>
-                    convertedValues:
-                    {convertedValues.map((value, index) => (
-                        <div key={index}>{value}</div>
-                    ))}
+                <div
+                    id="result"
+                    className="blackboard"
+                    style={{
+                        backgroundColor: 'black',
+                        height: '300px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontSize: '40px'
+                    }}
+                >
+                    {convertedValues && (
+                        <div>
+                            convertedValues:
+                            {convertedValues.map((value, index) => (
+                                <div key={index}>{value}</div>
+                            ))}
+                        </div>
+                    )}
                 </div>
-            )}</div>
-            <div id="codeDisplay"></div>
+            </div>
             <div>
                 <nav
                     style={{
                         width: '100%',
-                        backgroundColor: '#000',
+                        backgroundColor: 'white',
                         padding: '10px',
                         boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.5)',
                         zIndex: '1',
@@ -290,14 +306,13 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                         top: '0',
                     }}
                 >
-
                     <div className="button-div">
                         <button
                             id="clear"
                             style={{
-                                backgroundColor: 'grey',
+                                backgroundColor: '#0383be',
                                 boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
-                                padding: '1px',
+                                padding: '10px', // Add padding here
                             }}
                             className="nav-btn btn-fab-mini btn-neonBlue"
                             disabled
@@ -310,8 +325,9 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                             className="nav-btn btn-fab-mini btn-neonBlue"
                             disabled
                             style={{
-                                backgroundColor: 'grey',
+                                backgroundColor: '#0383be',
                                 boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
+                                padding: '10px', // Add padding here
                             }}
                         ></button>
                         <button
@@ -319,8 +335,9 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                             className="nav-btn btn-fab-mini btn-neonBlue"
                             disabled
                             style={{
-                                backgroundColor: 'grey',
+                                backgroundColor: '#0383be',
                                 boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
+                                padding: '10px', // Add padding here
                             }}
                         ></button>
                     </div>
@@ -330,22 +347,20 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                         className="classic-btn btn-neonBlue"
                         id="convert"
                         style={{
-                            backgroundColor: 'grey',
+                            backgroundColor: '#0383be',
                             boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
+                            padding: '10px', // Add padding here
                         }}
                         disabled
                     >
                         Convert
                     </button>
-                    <div id="editor" touch-action="none" style={{ color: 'black', backgroundColor: 'lightgrey', display: 'flex', flexDirection: 'column', padding: '10px' }}>
+                    <div id="editor" className="editor" style={{ marginTop: "20px" }}>
                         <h1 style={{ color: 'grey' }}>Write Here:</h1>
                     </div>
-
-
                 </nav>
             </div>
-        </div >
-    )
+        </div>
+    );
 }
-
-export default ScientificKeyboard;
+export default ScientificKeyboard

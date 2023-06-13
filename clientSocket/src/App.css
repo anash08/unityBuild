@@ -4,6 +4,17 @@
   color: "lightbrown"
 }
 
+.blackboard {
+  background-color: black;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 40px;
+  font-family: "Chalkboard", "Comic Sans MS", cursive;
+}
+
 .App-logo {
   height: 0vmin;
   pointer-events: none;
@@ -27,7 +38,7 @@
 } */
 
 .App-link {
-  color: #61dafb;
+  color: #0383be;
 }
 
 @keyframes App-logo-spin {
@@ -57,6 +68,7 @@
   max-width: 1880px;
   word-break: break-word;
   min-width: 100ch;
+  font-size: large;
 }
 
 .latexcontainer {

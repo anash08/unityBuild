@@ -1,7 +1,7 @@
+import ScientificKeyboard from './components/wrtitingfunc';
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import './App.css';
-import ScientificKeyboard from './components/wrtitingfunc';
 import QRCode from 'react-qr-code';
 
 const socket = io('https://unitysocketbuild.onrender.com');

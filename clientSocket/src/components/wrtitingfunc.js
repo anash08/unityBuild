@@ -106,6 +106,8 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
 
         const handleClear = () => {
             editorElement.editor.clear();
+            socket.emit('clearScreen');
+
         };
 
         // const handleResult = () => {
@@ -196,15 +198,35 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
         });
 
         socket.on("convertedValue", (convertedValue) => {
-            // Update the editor with the received converted value
-            // For example, you can set the converted value to the innerHTML of the editor element
-            const resultElement = document.getElementById("result");
-
-            resultElement.innerHTML = convertedValue;
-
+            // Clear the editor element before rendering the converted value
             const editorElement = document.getElementById("editor");
-            editorElement.innerHTML = katex.renderToString(convertedValue)
+            editorElement.innerHTML = '';
+
+            // Render the converted value using KaTeX and append it to the editor element
+            const renderedValue = katex.renderToString(convertedValue);
+            const mathNode = document.createElement('div');
+            mathNode.innerHTML = renderedValue;
+            editorElement.appendChild(mathNode);
+
+            if (convertedValue.trim() === '') {
+                editorElement.removeChild(mathNode);
+            }
+
+            // Update the result element with the received converted value
+            const resultElement = document.getElementById("result");
+            resultElement.innerHTML = convertedValue;
         });
+        socket.on('clearScreen', () => {
+            // Clear the editor element
+            const editorElement = document.getElementById('editor');
+            editorElement.innerHTML = '';
+
+            // Clear the result element
+            const resultElement = document.getElementById('result');
+            resultElement.innerHTML = '';
+        });
+
+
 
 
         socket.on('authenticationCode', (code) => {
@@ -268,7 +290,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
     return (
         <div >
             <div className="background" style={{ display: "-ms-flexbox" }}>
-                <h1>MATH!KEEBORED</h1>
+                <h1>MATHKEYBOARD</h1>
                 <div id="codeDisplay" style={{ position: "absolute", top: 0, right: 0 }}></div>
 
 

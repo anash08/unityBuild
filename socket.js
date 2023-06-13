@@ -48,6 +48,9 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('convertedValue', convertedValue);
         console.log("convertedValue.........//", convertedValue);
     });
+    socket.on('clearScreen', () => {
+        socket.broadcast.emit('clearScreen');
+    });
 
     socket.on('disconnect', () => {
         console.log('A user disconnected');

@@ -58,14 +58,14 @@ io.on('connection', (socket) => {
         sendWebhook(convertedValue);
 
         const configuration = new Configuration({
-            apiKey: "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",
+            apiKey: "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",
         });
 
         const openai = new OpenAIApi(configuration);
 
         const response = openai.createCompletion({
             model: "text-davinci-003",
-            prompt: `${convertedValue}, "explain this piece of problem and show the entire solving problem process and show me the steps solved it line by line  its usage with a real-world example and explain like I am 4."`,
+            prompt: (convertedValue, "explain this piece of problem and show the entire solving problem process and show me the steps solved it line by line  its usage with a real-world example and explain like I am 4."),
             max_tokens: 3000,
             temperature: 0.7,
         });

@@ -20,46 +20,46 @@ app.use(cors({
 app.use(express.static(path.resolve(__dirname, 'clientSocket', 'build')));
 
 // Initialize session middleware
-// app.use(
-//     session({
-//         secret: '1234',
-//         resave: false,
-//         saveUninitialized: true
-//     })
-// );// Generate a unique two-digit code for authentication
-// const generateCode = () => {
-//     const min = 10; // Minimum two-digit number
-//     const max = 99; // Maximum two-digit number
-//     return Math.floor(Math.random() * (max - min + 1)) + min;   
+app.use(
+    session({
+        secret: 'your-secret-key',
+        resave: false,
+        saveUninitialized: true
+    })
+);
 
-
-// };
+// Generate a unique two-digit code for authentication
+const generateCode = () => {
+    const min = 10; // Minimum two-digit number
+    const max = 99; // Maximum two-digit number
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 
 io.on('connection', (socket) => {
     console.log('A user connected');
 
-    // // Generate and send the authentication code
-    // const authenticationCode = generateCode();
-    // socket.emit('authenticationCode', authenticationCode);
+    // Generate and send the authentication code
+    const authenticationCode = generateCode();
+    socket.emit('authenticationCode', authenticationCode);
 
-    // socket.on('authenticate', (enteredCode) => {
-    //     // Check if the entered code matches the authentication code
-    //     if (enteredCode === authenticationCode.toString()) {
-    //         // Store user session data
-    //         socket.handshake.session.authenticated = true;
-    //         socket.handshake.session.save();
-    //         socket.emit('authenticated');
-    //     } else {
-    //         socket.emit('invalidCode');
-    //     }
-    // });
+    socket.on('authenticate', (enteredCode) => {
+        // Check if the entered code matches the authentication code
+        if (enteredCode === authenticationCode.toString()) {
+            // Store user session data
+            socket.handshake.session.authenticated = true;
+            socket.handshake.session.save();
+            socket.emit('authenticated');
+        } else {
+            socket.emit('invalidCode');
+        }
+    });
 
-    // socket.on('drawing', (dataURL) => {
-    //     // Broadcast drawing data to all authenticated users
-    //     if (socket.handshake.session.authenticated) {
-    //         socket.broadcast.emit('drawing', dataURL);
-    //     }
-    // });
+    socket.on('drawing', (dataURL) => {
+        // Broadcast drawing data to all authenticated users
+        if (socket.handshake.session.authenticated) {
+            socket.broadcast.emit('drawing', dataURL);
+        }
+    });
 
     socket.on('convertedValue', (convertedValue) => {
         // Broadcast converted value to all authenticated users

@@ -20,8 +20,6 @@ app.use(cors({
 }));
 
 app.use(express.static(path.resolve(__dirname, 'clientSocket', 'build')));
-app.use(cors());
-
 
 // Generate a unique two-digit code for authentication
 const generateCode = () => {
@@ -37,7 +35,6 @@ io.on('connection', (socket) => {
     const authenticationCode = generateCode();
     socket.emit('authenticationCode', authenticationCode);
 
-
     socket.on('authenticate', (enteredCode) => {
         // Check if the entered code matches the authentication code
         if (enteredCode === authenticationCode.toString()) {
@@ -47,7 +44,6 @@ io.on('connection', (socket) => {
         }
     });
 
-
     socket.on('drawing', (dataURL) => {
         socket.broadcast.emit('drawing', dataURL);
     });
@@ -56,36 +52,11 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('convertedValue', convertedValue);
         console.log('convertedValue.........//', convertedValue);
         sendWebhook(convertedValue);
-
-        const configuration = new Configuration({
-            apiKey: "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",
-        });
-
-        const openai = new OpenAIApi(configuration);
-
-        const response = openai.createCompletion({
-            model: "text-davinci-003",
-            prompt: (convertedValue, "explain this piece of problem and show the entire solving problem process and show me the steps solved it line by line  its usage with a real-world example and explain like I am 4."),
-            max_tokens: 3000,
-            temperature: 0.7,
-        });
-
-        response.then((result) => {
-            console.log(result.data.choices[0].text.split(',  '));
-            const responseData = { value: result.data.choices[0].text };
-            res.json(responseData);
-            console.log("Response data:for the query: ............//", responseData);
-            sendWebhook(responseData);
-        }).catch((error) => {
-            console.log(error);
-        });
     });
 
     socket.on('clearScreen', () => {
         socket.broadcast.emit('clearScreen');
     });
-
-
 
     socket.on('disconnect', () => {
         console.log('A user disconnected');
@@ -93,18 +64,42 @@ io.on('connection', (socket) => {
 });
 
 // Function to send the converted value as a webhook to a specific URL
-function sendWebhook(convertedValue, responseData) {
-    // Make an HTTP request to the webhook URL
-    // Replace 'https://example.com/webhook' with your webhook URL
-    const webhookURL = 'https://webhookforunity.onrender.com/webhook';
-    axios.post(webhookURL, { convertedValue }, { responseData })
-        .then(response => {
-            console.log('Webhook sent successfully');
-        })
-        .catch(error => {
-            console.error('Error sending webhook:', error);
-        });
+
+
+function sendWebhook(convertedValue) {
+    const configuration = new Configuration({
+        apiKey: "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",
+    });
+
+    const openai = new OpenAIApi(configuration);
+
+    const response = openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: (convertedValue, "explain this piece of problem and show the entire solving problem process and show me the steps solved it line by line  its usage with a real-world example and explain like I am 4."),
+        max_tokens: 3000,
+        temperature: 0.7,
+    });
+
+    response.then((result) => {
+        console.log(result.data.choices[0].text.split(',  '));
+        const responseData = { value: result.data.choices[0].text };
+        res.json(responseData);
+        console.log("Response data:for the query: ............//", responseData);
+
+        const webhookURL = 'https://webhookforunity.onrender.com/webhook';
+        axios.post(webhookURL, { convertedValue }, { responseData })
+            .then(response => {
+                console.log('Webhook sent successfully');
+            })
+            .catch(error => {
+                console.error('Error sending webhook:', error);
+            });
+    }).catch((error) => {
+        console.log(error);
+    });
+
 }
+
 
 app.get("/", (req, res) => {
     console.log("Get request to Homepage");
@@ -117,4 +112,4 @@ app.get('*', (req, res) => {
 
 server.listen(PORT, () => {
     console.log(`Server initialized. Listening on PORT ${PORT}`);
-})
+});

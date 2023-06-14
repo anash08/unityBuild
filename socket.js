@@ -18,15 +18,8 @@ app.use(cors({
 }));
 
 app.use(express.static(path.resolve(__dirname, 'clientSocket', 'build')));
+app.use(cors());
 
-// Initialize session middleware
-app.use(
-    session({
-        secret: 'your-secret-key',
-        resave: false,
-        saveUninitialized: true
-    })
-);
 
 // Generate a unique two-digit code for authentication
 const generateCode = () => {
@@ -42,40 +35,31 @@ io.on('connection', (socket) => {
     const authenticationCode = generateCode();
     socket.emit('authenticationCode', authenticationCode);
 
+
     socket.on('authenticate', (enteredCode) => {
         // Check if the entered code matches the authentication code
         if (enteredCode === authenticationCode.toString()) {
-            // Store user session data
-            socket.handshake.session.authenticated = true;
-            socket.handshake.session.save();
             socket.emit('authenticated');
         } else {
             socket.emit('invalidCode');
         }
     });
+})
 
-    socket.on('drawing', (dataURL) => {
-        // Broadcast drawing data to all authenticated users
-        if (socket.handshake.session.authenticated) {
-            socket.broadcast.emit('drawing', dataURL);
-        }
-    });
-
-    socket.on('convertedValue', (convertedValue) => {
-        // Broadcast converted value to all authenticated users
-        if (socket.handshake.session.authenticated) {
-            socket.broadcast.emit('convertedValue', convertedValue);
-
-            // Send the converted value as a webhook to a specific URL
-            sendWebhook(convertedValue);
-        }
-    });
-
-    socket.on('disconnect', () => {
-        console.log('A user disconnected');
-    });
+socket.on('drawing', (dataURL) => {
+    socket.broadcast.emit('drawing', dataURL);
 });
 
+socket.on('convertedValue', (convertedValue) => {
+    socket.broadcast.emit('convertedValue', convertedValue);
+    console.log('convertedValue.........//', convertedValue);
+    sendWebhook(convertedValue);
+}
+);
+
+socket.on('disconnect', () => {
+    console.log('A user disconnected');
+});
 // Function to send the converted value as a webhook to a specific URL
 function sendWebhook(convertedValue) {
     // Make an HTTP request to the webhook URL
@@ -101,4 +85,4 @@ app.get('*', (req, res) => {
 
 server.listen(PORT, () => {
     console.log(`Server initialized. Listening on PORT ${PORT}`);
-});
+})

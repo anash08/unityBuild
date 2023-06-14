@@ -56,6 +56,10 @@ io.on('connection', (socket) => {
         sendWebhook(convertedValue);
     }
     );
+    socket.on('clearScreen', () => {
+        socket.broadcast.emit('clearScreen');
+    });
+
 
     socket.on('disconnect', () => {
         console.log('A user disconnected');

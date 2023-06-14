@@ -44,21 +44,22 @@ io.on('connection', (socket) => {
             socket.emit('invalidCode');
         }
     });
-})
 
-socket.on('drawing', (dataURL) => {
-    socket.broadcast.emit('drawing', dataURL);
-});
 
-socket.on('convertedValue', (convertedValue) => {
-    socket.broadcast.emit('convertedValue', convertedValue);
-    console.log('convertedValue.........//', convertedValue);
-    sendWebhook(convertedValue);
-}
-);
+    socket.on('drawing', (dataURL) => {
+        socket.broadcast.emit('drawing', dataURL);
+    });
 
-socket.on('disconnect', () => {
-    console.log('A user disconnected');
+    socket.on('convertedValue', (convertedValue) => {
+        socket.broadcast.emit('convertedValue', convertedValue);
+        console.log('convertedValue.........//', convertedValue);
+        sendWebhook(convertedValue);
+    }
+    );
+
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
+    });
 });
 // Function to send the converted value as a webhook to a specific URL
 function sendWebhook(convertedValue) {

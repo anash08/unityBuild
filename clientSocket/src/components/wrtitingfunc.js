@@ -27,6 +27,7 @@ import * as iink from 'iink-js';
 
 
 const socket = io("https://unitysocketbuild.onrender.com")
+const URL = "https://unitysocketbuild.onrender.com"
 //............................///..................................//
 const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues, inputValue }) => {
 
@@ -293,11 +294,14 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
     };
 
 
+
     return (
         <div >
             <div className="background" style={{ display: "-ms-flexbox" }}>
                 <h1 style={{ backgroundColor: "beige" }}>MATHKEYBOARD</h1>
+
                 <div id="codeDisplay" style={{ position: "absolute", top: 0, right: 0 }}></div>
+                <QRCode value={URL.toString()} size={128} style={{ position: "absolute", top: 0, right: 0 }} />
 
 
                 <div

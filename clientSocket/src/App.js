@@ -66,7 +66,7 @@ const App = () => {
 
   return (
     <div className="App">
-      {!authenticated && showEnterCode && (
+      {/* {!authenticated && showEnterCode && (
         <div>
           <h1>Welcome to the Application</h1>
           <h2>Scan QR Code or Enter User Code to Access Scientific Keyboard</h2>
@@ -85,23 +85,23 @@ const App = () => {
         <div>
           <h1>Scanning QR Code...</h1>
           {/* Render the QR code scanner component */}
-          <QrReader delay={300} onError={handleError} onScan={handleScan} />
-        </div>
-      )}
+      {/* <QrReader delay={300} onError={handleError} onScan={handleScan} /> */}
+      {/* </div> */}
+      {/* )} */} *
 
-      {authenticated && (
-        <>
-          <ScientificKeyboard
-            name="converted"
-            display="flex"
-            handleInput={handleInput}
-            handleConvertedValue={handleConvertedValue}
-          />
+      {/* // {authenticated && ( */}
+      <>
+        <ScientificKeyboard
+          name="converted"
+          display="flex"
+          handleInput={handleInput}
+          handleConvertedValue={handleConvertedValue}
+        />
 
-          {/* Other JSX code */}
-          <h1>{convertedValues}</h1>
-        </>
-      )}
+        {/* Other JSX code */}
+        <h1>{convertedValues}</h1>
+      </>
+      {/* // )} */}
 
       {/* Render the QR code */}
     </div>

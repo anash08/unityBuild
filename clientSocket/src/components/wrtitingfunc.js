@@ -14,6 +14,9 @@ import QRCode from "react-qr-code";
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import ReactDOM from 'react-dom';
+import { QrReader } from 'react-qr-reader';
+
+
 
 
 
@@ -36,6 +39,9 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
     const [penType, setPenType] = useState('PEN');
     const [ipAddress, setIpAddress] = useState("");
     const [userCode, setUserCode] = useState('');
+    const [authenticated, setAuthenticated] = useState(false);
+    const [authenticationCode, setAuthenticationCode] = useState('');
+    const [showEnterCode, setShowEnterCode] = useState(true);
 
 
     useEffect(() => {

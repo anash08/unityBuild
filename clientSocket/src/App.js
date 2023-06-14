@@ -1,7 +1,10 @@
 import ScientificKeyboard from './components/wrtitingfunc';
 import React, { useState } from 'react';
 import './App.css';
+import io from 'socket.io-client';
 
+
+const socket = io("https://unitysocketbuild.onrender.com")
 const App = () => {
   const [inputValue, setInputValue] = useState('');
   const [convertedValues, setConvertedValues] = useState([]);

@@ -56,36 +56,37 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('convertedValue', convertedValue);
         console.log('convertedValue.........//', convertedValue);
         sendWebhook(convertedValue);
-    }
-    );
+
+        const configuration = new Configuration({
+            apiKey: "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",
+        });
+
+        const openai = new OpenAIApi(configuration);
+
+        const response = openai.createCompletion({
+            model: "text-davinci-003",
+            prompt: `${convertedValue}, "explain this piece of problem and show the entire solving problem process and show me the steps solved it line by line  its usage with a real-world example and explain like I am 4."`,
+            max_tokens: 3000,
+            temperature: 0.7,
+        });
+
+        response.then((result) => {
+            console.log(result.data.choices[0].text.split(',  '));
+            const responseData = { value: result.data.choices[0].text };
+            res.json(responseData);
+            console.log("Response data:for the query: ............//", responseData);
+            sendWebhook(responseData);
+        }).catch((error) => {
+            console.log(error);
+        });
+    });
+
     socket.on('clearScreen', () => {
         socket.broadcast.emit('clearScreen');
     });
 
 
-    const configuration = new Configuration({
-        apiKey: "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",
-    });
-    console.log("set the configuration properties................................................................");
 
-    const openai = new OpenAIApi(configuration);
-    console.log("new configuration properties set for the API................................................................");
-
-    const response = openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: (convertedValue, "explain this piece of problem and show the entire solving problem process and show me the steps solved it line by line  its usage with a real world example and explain like iam 4."),
-        max_tokens: 3000,
-        temperature: 0.7,
-    });
-    response.then((result) => {
-        console.log(result.data.choices[0].text.split(',  '));
-        const responseData = { value: result.data.choices[0].text };
-        res.json(responseData);
-        console.log("Response data:for the query: ............//", responseData);
-        sendWebhook(responseData);
-    }).catch((error) => {
-        console.log(error);
-    });
     socket.on('disconnect', () => {
         console.log('A user disconnected');
     });

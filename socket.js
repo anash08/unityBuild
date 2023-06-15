@@ -66,11 +66,13 @@ io.on('connection', (socket) => {
     }
 
     socket.on('convertedValue', (convertedValue) => {
-        socket.broadcast.emit('convertedValue', convertedValue);
         convertedValue = convertToLatex(convertedValue);
         console.log('convertedValue.........//', convertedValue);
-        sendWebhook(convertedValue);
+        sendWebhook(convertedValue, (generations) => {
+            socket.emit('generations', generations);
+        });
     });
+
 
     socket.on('clearScreen', () => {
         socket.broadcast.emit('clearScreen');

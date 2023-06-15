@@ -15,6 +15,11 @@ const App = () => {
   const [showEnterCode, setShowEnterCode] = useState(true);
 
   useEffect(() => {
+
+    // Fetch the convertedValue and generations
+
+
+
     const isAuthenticated = localStorage.getItem('authenticated');
     if (isAuthenticated) {
       setAuthenticated(true);

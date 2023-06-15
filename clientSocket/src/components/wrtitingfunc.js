@@ -43,10 +43,18 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
     const [authenticated, setAuthenticated] = useState(false);
     const [authenticationCode, setAuthenticationCode] = useState('');
     const [showEnterCode, setShowEnterCode] = useState(true);
+    const [generations, setGenerations] = useState('');
+
 
 
     useEffect(() => {
 
+        fetch('https://webhookforunity.onrender.com/convertedValue')
+            .then(response => response.json())
+            .then(data => {
+                setGenerations(data.generations);
+            })
+            .catch(error => console.error(error));
 
 
 
@@ -222,6 +230,15 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
             // Update the result element with the received converted value
             const resultElement = document.getElementById("result");
             resultElement.innerHTML = convertedValue;
+        });
+        socket.on("generations", (generations) => {
+            // Update the editor element with the generated text
+            const editorElement = document.getElementById("editor");
+            editorElement.innerHTML = generations;
+
+            // Clear the result element
+            const resultElement = document.getElementById("result");
+            resultElement.innerHTML = '';
         });
         socket.on('clearScreen', () => {
             // Clear the editor element

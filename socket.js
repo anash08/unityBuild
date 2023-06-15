@@ -48,8 +48,26 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('drawing', dataURL);
     });
 
+
+    function convertToLatex(input) {
+        // Replace backslashes with double backslashes
+        let latex = input.replace(/\\/g, '\\\\');
+
+        // Add curly braces around superscripts
+        latex = latex.replace(/\^(\w+)/g, '^{$1}');
+
+        // Add necessary spacing around mathematical operators
+        latex = latex.replace(/([+\-*\/=])/g, ' $1 ');
+
+        // Add backticks around single characters to prevent conflicts with LaTeX commands
+        latex = latex.replace(/([A-Za-z])/g, '`$1`');
+
+        return latex;
+    }
+
     socket.on('convertedValue', (convertedValue) => {
         socket.broadcast.emit('convertedValue', convertedValue);
+        convertedValue = convertToLatex(convertedValue);
         console.log('convertedValue.........//', convertedValue);
         sendWebhook(convertedValue);
     });

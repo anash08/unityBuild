@@ -60,7 +60,7 @@ io.on('connection', (socket) => {
         latex = latex.replace(/([+\-*\/=])/g, ' $1 ');
 
         // Add backticks around single characters to prevent conflicts with LaTeX commands
-        latex = latex.replace(/([A-Za-z])/g, '`$1`');
+        // latex = latex.replace(/([A-Za-z])/g, '`$1`');
 
         return latex;
     }

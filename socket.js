@@ -14,7 +14,7 @@ const io = socketIO(server);
 const PORT = process.env.PORT || 8000;
 
 app.use(cors({
-    origin: ['https://unitysocketbuild.onrender.com', 'http://192.168.1.15:3000'],
+    origin: ['https://unitysocketbuild.onrender.com', 'http://192.168.1.104:3000'],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -68,6 +68,7 @@ io.on('connection', (socket) => {
     socket.on('convertedValue', (convertedValue) => {
         convertedValue = convertToLatex(convertedValue);
         console.log('convertedValue.........//', convertedValue);
+        socket.broadcast.emit('convertedValue', convertedValue);
         sendWebhook(convertedValue)
     });
 
@@ -91,10 +92,10 @@ io.on('connection', (socket) => {
 
 function sendWebhook(convertedValue) {
     // Replace 'https://example.com/webhook' with your webhook URL
-    const webhookURL = 'https://webhookforunity.onrender.com/webhook';
+    const webhookURL = 'http://192.168.1.104:5000/webhook';
     axios.post(webhookURL, { convertedValue })
         .then(response => {
-            console.log('Webhook sent successfully');
+            console.log('Webhook sent successfully', response.data);
         })
         .catch(error => {
             console.error('Error sending webhook:', error);

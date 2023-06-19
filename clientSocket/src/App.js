@@ -4,8 +4,9 @@ import io from 'socket.io-client';
 import './App.css';
 import QRCode from 'react-qr-code';
 import { QrReader } from 'react-qr-reader';
+import axios from 'axios';
 
-const socket = io('https://unitysocketbuild.onrender.com');
+const socket = io('https://unitysocketbuild.onrender.com/');
 
 const App = () => {
   const [inputValue, setInputValue] = useState('');
@@ -13,12 +14,33 @@ const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [authenticationCode, setAuthenticationCode] = useState('');
   const [showEnterCode, setShowEnterCode] = useState(true);
+  const [pageReloaded, setPageReloaded] = useState(false);
+  const [showKeyboard, setShowKeyboard] = useState(false);
+  const [conVal, setConVal] = useState(true);
+
+
 
   useEffect(() => {
 
-    // Fetch the convertedValue and generations
 
 
+    const fetchConvertedValue = async () => {
+      try {
+        const response = await axios.get('https://webhookforunity.onrender.com/convertedValue');
+        setConVal(response.data);
+      } catch (error) {
+        console.error('Error fetching converted value:', error);
+      }
+    };
+
+    fetchConvertedValue();
+
+    const showKeyboardState = localStorage.getItem('showKeyboard');
+    setShowKeyboard(showKeyboardState === 'true');
+    setPageReloaded(true);
+    if (showKeyboardState === 'true') {
+      window.addEventListener('beforeunload', handleBeforeUnload);
+    }
 
     const isAuthenticated = localStorage.getItem('authenticated');
     if (isAuthenticated) {
@@ -39,7 +61,15 @@ const App = () => {
     socket.on('invalidCode', () => {
       alert('Invalid authentication code. Please try again.');
     });
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
+
+  const handleBeforeUnload = () => {
+    localStorage.setItem('showKeyboard', showKeyboard ? 'true' : 'false');
+  };
 
   const handleInput = (symbol) => {
     setInputValue((prevInputValue) => prevInputValue + symbol);
@@ -49,40 +79,28 @@ const App = () => {
     setConvertedValues((prevConvertedValues) => [...prevConvertedValues, convertedValue]);
   };
 
-  // const handleSubmit = () => {
-  //   if (showEnterCode) {
-  //     const enteredCode = prompt('Enter secret key');
-  //     socket.emit('authenticate', enteredCode);
-  //   }
-  // };
-
-  // const handleError = (error) => {
-  //   console.error(error);
-  // };
-
-  // const handleScan = (data) => {
-  //   const enteredCode = prompt('Enter secret key');
-  //   if (data === authenticationCode.toString() && enteredCode === '1234') {
-  //     setAuthenticated(true);
-  //     setShowEnterCode(false);
-  //     localStorage.setItem('authenticated', true);
-  //   }
-  // };
-
   return (
     <div className="App">
 
-      <>
-        <ScientificKeyboard
-          name="converted"
-          display="flex"
-          handleInput={handleInput}
-          handleConvertedValue={handleConvertedValue}
-        />
 
-        <h1>{convertedValues}</h1>
-      </>
 
+      <ScientificKeyboard
+        name="converted"
+        display="flex"
+        handleInput={handleInput}
+        handleConvertedValue={handleConvertedValue}
+
+      />
+      <h1>Generations:</h1>
+      {conVal !== null ? (
+        <p>{conVal}</p>
+      ) : (
+        <p>Loading generations...</p>
+      )}
+
+      {convertedValues.map((value, index) => (
+        <h1 key={index}>{value}</h1>
+      ))}
     </div>
   );
 };

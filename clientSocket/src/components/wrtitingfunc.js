@@ -26,10 +26,12 @@ import * as iink from 'iink-js';
 
 
 
-const socket = io("https://unitysocketbuild.onrender.com")
+// const socket = io("https://unitysocketbuild.onrender.com")
+const socket = io('https://unitysocketbuild.onrender.com');
+
 const URL = "https://unitysocketbuild.onrender.com"
 //............................///..................................//
-const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues, inputValue }) => {
+const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues, fetchdata }) => {
 
 
     const [outputValue, setOutputValue] = useState('');
@@ -47,14 +49,11 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
 
 
 
+
+
     useEffect(() => {
 
-        fetch('https://webhookforunity.onrender.com/convertedValue')
-            .then(response => response.json())
-            .then(data => {
-                setGenerations(data.generations);
-            })
-            .catch(error => console.error(error));
+
 
 
 
@@ -138,6 +137,11 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
             socket.emit('convertedValue', convertedValue); // Emit the converted value through the socket
             handleConvertedValue(convertedValue);
             console.log("Converted value", convertedValue);
+            fetchdata(editorElement.editor)
+
+
+
+
         };
 
         const handlePen = () => {
@@ -231,15 +235,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
             const resultElement = document.getElementById("result");
             resultElement.innerHTML = convertedValue;
         });
-        socket.on("generations", (generations) => {
-            // Update the editor element with the generated text
-            const editorElement = document.getElementById("editor");
-            editorElement.innerHTML = generations;
 
-            // Clear the result element
-            const resultElement = document.getElementById("result");
-            resultElement.innerHTML = '';
-        });
         socket.on('clearScreen', () => {
             // Clear the editor element
             const editorElement = document.getElementById('editor');
@@ -248,6 +244,11 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
             // Clear the result element
             const resultElement = document.getElementById('result');
             resultElement.innerHTML = '';
+            // eslint-disable-next-line no-restricted-globals
+            location.reload();
+
+
+
         });
 
 
@@ -416,6 +417,9 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                     </button>
                     <div id="editor" className="editor" style={{ marginTop: "20px", padding: "10px", color: "black" }}>
                         <h1 style={{ color: 'grey' }}>Write Here:</h1>
+                        <div>
+
+                        </div>
                     </div>
 
                 </nav>

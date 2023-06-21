@@ -27,11 +27,12 @@ import * as iink from 'iink-js';
 
 
 // const socket = io("https://unitysocketbuild.onrender.com")
-const socket = io('https://unitysocketbuild.onrender.com');
+const socket = io('http://localhost:9000');
+
 
 const URL = "https://unitysocketbuild.onrender.com"
 //............................///..................................//
-const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues, fetchdata }) => {
+const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues, conVal, generations }) => {
 
 
     const [outputValue, setOutputValue] = useState('');
@@ -45,7 +46,6 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
     const [authenticated, setAuthenticated] = useState(false);
     const [authenticationCode, setAuthenticationCode] = useState('');
     const [showEnterCode, setShowEnterCode] = useState(true);
-    const [generations, setGenerations] = useState('');
 
 
 
@@ -137,7 +137,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
             socket.emit('convertedValue', convertedValue); // Emit the converted value through the socket
             handleConvertedValue(convertedValue);
             console.log("Converted value", convertedValue);
-            fetchdata(editorElement.editor)
+            generations(editorElement.editor)
 
 
 
@@ -233,7 +233,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
 
             // Update the result element with the received converted value
             const resultElement = document.getElementById("result");
-            resultElement.innerHTML = convertedValue;
+            resultElement.innerHTML = conVal;
         });
 
         socket.on('clearScreen', () => {
@@ -289,7 +289,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                 editorElement.editor.resize();
             });
         };
-    }, []);
+    }, [conVal]);
 
 
 
@@ -336,6 +336,20 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                         border: "10px solid beige"
                     }}
                 >
+                    {/* {generations && (
+                        <div>
+                            Generation:
+                            <div>{generations}</div>
+                        </div>
+                    )} */}
+                    {conVal !== '' ? (
+                        <div>
+                            Converted Value:
+                            <p>{conVal}</p>
+                        </div>
+                    ) : (
+                        <div>Loading...</div>
+                    )}
                     {convertedValues && (
                         <div>
                             convertedValues:
@@ -364,13 +378,13 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                             style={{
                                 backgroundColor: '#0383be',
                                 boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
-                                padding: '5px', // Add padding here to increase the size of the button
+                                padding: '1px', // Add padding here to increase the size of the button
                                 border: '2px solid black',
                                 display: 'flex', // Enable flexbox for button content alignment
                                 alignItems: 'center', // Align the icon vertically
                                 justifyContent: 'center', // Align the icon horizontally
                             }}
-                            className="nav-btn btn-fab-mini btn-neonBlue"
+                            className="glow-on-hover"
                             disabled
                         >
                             <DeleteIcon style={{ width: '100%', height: '100%' }} />
@@ -379,7 +393,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
 
                         <button
                             id="undo"
-                            className="nav-btn btn-fab-mini btn-neonBlue"
+                            className="glow-on-hover"
                             disabled
                             style={{
                                 backgroundColor: '#0383be',
@@ -390,12 +404,12 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                         ></button>
                         <button
                             id="redo"
-                            className="nav-btn btn-fab-mini btn-neonBlue"
+                            className="glow-on-hover"
                             disabled
                             style={{
-                                backgroundColor: '#0383be',
+                                backgroundColor: 'white',
                                 boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
-                                padding: '5px', // Add padding here to increase the size of the button
+                                padding: '1px', // Add padding here to increase the size of the button
                                 border: '2px solid black',
                             }}
                         ></button>
@@ -403,12 +417,12 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
 
                     <div className="spacer"></div>
                     <button
-                        className="classic-btn btn-neonBlue"
+                        className="glow-on-hover"
                         id="convert"
                         style={{
                             backgroundColor: '#0383be',
                             boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
-                            padding: '15px', // Add padding here to increase the size of the button
+                            padding: '10px', // Add padding here to increase the size of the button
                             border: '2px solid black',
                         }}
                         disabled

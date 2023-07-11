@@ -7,14 +7,16 @@ import KeyboardIcon from '@mui/icons-material/Keyboard';
 import KeyboardHideTwoToneIcon from '@mui/icons-material/KeyboardHideTwoTone';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import UndoIcon from '@mui/icons-material/Undo';
-import RedoIcon from '@mui/icons-material/Redo';
 import io from 'socket.io-client';
 import QRCode from "react-qr-code";
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 import ReactDOM from 'react-dom';
 import { QrReader } from 'react-qr-reader';
+import undoIcon from '../undo-svgrepo-com.svg'; // Import the SVG image
+import redoIcon from '../redo-svgrepo-com.svg'; // Import
+
+
 
 
 
@@ -32,7 +34,7 @@ const socket = io('http://localhost:9000');
 
 const URL = "https://unitysocketbuild.onrender.com"
 //............................///..................................//
-const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues, conVal, generations }) => {
+const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues, conVal, generations, isKeyboardVisible }) => {
 
 
     const [outputValue, setOutputValue] = useState('');
@@ -46,6 +48,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
     const [authenticated, setAuthenticated] = useState(false);
     const [authenticationCode, setAuthenticationCode] = useState('');
     const [showEnterCode, setShowEnterCode] = useState(true);
+    const [responses, setResponses] = useState([]);
 
 
 
@@ -134,7 +137,8 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
 
             editorElement.editor.convert();
             const convertedValue = resultElement.innerText; // Get the converted value
-            socket.emit('convertedValue', convertedValue); // Emit the converted value through the socket
+            socket.emit('convertedValue', convertedValue);
+            console.log("the value of the converted Value the latex conversion........//,........", convertedValue) // Emit the converted value through the socket
             handleConvertedValue(convertedValue);
             console.log("Converted value", convertedValue);
             generations(editorElement.editor)
@@ -233,7 +237,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
 
             // Update the result element with the received converted value
             const resultElement = document.getElementById("result");
-            resultElement.innerHTML = conVal;
+            resultElement.innerHTML = '';
         });
 
         socket.on('clearScreen', () => {
@@ -314,13 +318,12 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
 
 
     return (
-        <div >
+        <div>
             <div className="background" style={{ display: "-ms-flexbox" }}>
                 <h1 style={{ backgroundColor: "beige" }}>MATHKEYBOARD</h1>
 
                 <div id="codeDisplay" style={{ position: "absolute", top: 0, right: 0 }}></div>
                 <QRCode value={URL.toString()} size={128} style={{ position: "absolute", top: 0, right: 0 }} />
-
 
                 <div
                     id="result"
@@ -336,23 +339,9 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                         border: "10px solid beige"
                     }}
                 >
-                    {/* {generations && (
-                        <div>
-                            Generation:
-                            <div>{generations}</div>
-                        </div>
-                    )} */}
-                    {conVal !== '' ? (
-                        <div>
-                            Converted Value:
-                            <p>{conVal}</p>
-                        </div>
-                    ) : (
-                        <div>Loading...</div>
-                    )}
                     {convertedValues && (
                         <div>
-                            convertedValues:
+
                             {convertedValues.map((value, index) => (
                                 <div key={index}>{value}</div>
                             ))}
@@ -378,7 +367,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                             style={{
                                 backgroundColor: '#0383be',
                                 boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
-                                padding: '1px', // Add padding here to increase the size of the button
+                                padding: '5px', // Reduce padding here to decrease the size of the button
                                 border: '2px solid black',
                                 display: 'flex', // Enable flexbox for button content alignment
                                 alignItems: 'center', // Align the icon vertically
@@ -387,9 +376,8 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                             className="glow-on-hover"
                             disabled
                         >
-                            <DeleteIcon style={{ width: '100%', height: '100%' }} />
+                            <DeleteIcon style={{ width: '70%', height: '70%' }} /> {/* Adjust the width and height of the icon */}
                         </button>
-
 
                         <button
                             id="undo"
@@ -398,21 +386,34 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                             style={{
                                 backgroundColor: '#0383be',
                                 boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
-                                padding: '5px', // Add padding here to increase the size of the button
+                                padding: '3px',
                                 border: '2px solid black',
+                                backgroundImage: `url(${undoIcon})`,
+                                backgroundSize: 'contain',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'center',
                             }}
-                        ></button>
+                        >
+                            <undoIcon style={{ width: '70%', height: '70' }} />
+                        </button>
                         <button
                             id="redo"
                             className="glow-on-hover"
                             disabled
                             style={{
-                                backgroundColor: 'white',
+                                backgroundColor: '#0383be',
                                 boxShadow: '0px 2px 4px rgba(0, 255, 255, 0.3)',
-                                padding: '1px', // Add padding here to increase the size of the button
+                                padding: '3px',
                                 border: '2px solid black',
+                                backgroundImage: `url(${redoIcon})`,
+                                backgroundSize: 'contain',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'center',
                             }}
-                        ></button>
+                        >
+                            <redoIcon style={{ width: '70%', height: '70' }} />
+
+                        </button>
                     </div>
 
                     <div className="spacer"></div>
@@ -429,16 +430,28 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
                     >
                         Convert
                     </button>
-                    <div id="editor" className="editor" style={{ marginTop: "20px", padding: "10px", color: "black" }}>
-                        <h1 style={{ color: 'grey' }}>Write Here:</h1>
-                        <div>
-
-                        </div>
-                    </div>
-
                 </nav>
             </div>
+            <div
+                id="editor"
+                className="editor"
+                style={{
+                    marginTop: "20px",
+                    padding: "10px",
+                    color: "black",
+                    height: "calc(100vh - 220px)",
+                    width: "calc(100vw - 40px)", // Adjust the width based on your desired padding
+                    maxWidth: "1000px", // Set a maximum width for the editor if needed
+                    margin: "0 auto", // Center the editor horizontally
+                    border: "2px solid black", // Add a border with desired styles
+
+                }}
+            >
+                <h1 style={{ color: 'grey' }}>Write Here:</h1>
+            </div>
+
         </div>
     );
+
 }
 export default ScientificKeyboard

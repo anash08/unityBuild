@@ -23,8 +23,8 @@ import { Replicate } from "langchain/llms/replicate";
 
 
 
-// const socket = io('https://unitysocketbuild.onrender.com/');
-const socket = io('http://localhost:9000');
+const socket = io('https://unitysocketbuild.onrender.com/');
+// const socket = io('http://localhost:9000');
 
 const App = () => {
   const [conVal, setConVal] = useState(true);
@@ -45,7 +45,6 @@ const App = () => {
   const [showPromptInput, setShowPromptInput] = useState(false);
   const [inputLatex, setInputLatex] = useState(false);
   const [responseLoaded, setResponseLoaded] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [reloadCount, setReloadCount] = useState(0);
 
 
@@ -81,7 +80,8 @@ const App = () => {
     const fetchConvertedValue = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/convertedValue');
+        const response = await axios.get('https://webhookforunity.onrender.com/convertedValue');
+        // const response = await axios.get('http://localhost:5000/convertedValue');
         setConVal(response.data);
         setReloadCount((prevCount) => prevCount + 1);
       } catch (error) {

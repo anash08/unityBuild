@@ -103,10 +103,10 @@ const App = () => {
 
     // promptValueFetch();
 
-    const handleNewGeneration = (generation) => {
-      setConVal(generation);
-      setConvertedValues((prevConvertedValues) => [...prevConvertedValues, generation]);
-    };
+    // const handleNewGeneration = (generation) => {
+    //   setConVal(generation);
+    //   setConvertedValues((prevConvertedValues) => [...prevConvertedValues, generation]);
+    // };
 
     const showKeyboardState = localStorage.getItem('showKeyboard');
     setShowKeyboard(showKeyboardState === 'true');

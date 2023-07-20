@@ -13,19 +13,14 @@ import KeyboardIcon from '@mui/icons-material/Keyboard';
 import IconButton from '@material-ui/core/IconButton';
 
 import KeyboardHideTwoToneIcon from '@mui/icons-material/KeyboardHideTwoTone';
-
-
-// import { OpenAI } from "langchain/llms/openai";
-// import { BufferMemory } from "langchain/memory";
-// import { ConversationChain } from "langchain/chains";
-import { HuggingFaceInference } from "langchain/llms/hf";
-import { Replicate } from "langchain/llms/replicate";
-
-
+import LatKeyboard from './components/latexKeyboard';
+import mainApp from './main';
+import { BrowserRouter as Router, Route, Switch, Routes } from 'react-router-dom';
+import ChemKeyboard from './components/chemistry';
+import backgroundImage from '/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/robotteacher.jpeg';
 
 const socket = io('https://unitysocketbuild.onrender.com/');
 // const socket = io('http://localhost:9000');
-
 const App = () => {
   const [conVal, setConVal] = useState(true);
   const [inputValue, setInputValue] = useState('');
@@ -36,6 +31,8 @@ const App = () => {
   const [pageReloaded, setPageReloaded] = useState(false);
   const [showKeyboard, setShowKeyboard] = useState(false);
   const [showScientificKeyboard, setShowScientificKeyboard] = useState(false);
+  const [showMathKeyboard, setShowMathKeyboard] = useState(false);
+  const [showChemistryKeyboard, setShowChemistryKeyboard] = useState(false);
   const canvasRef = useRef(null);
   const [convertedValue, setConvertedValue] = useState('');
   const [generations, setGenerations] = useState([]);
@@ -46,74 +43,49 @@ const App = () => {
   const [inputLatex, setInputLatex] = useState(false);
   const [responseLoaded, setResponseLoaded] = useState(true);
   const [reloadCount, setReloadCount] = useState(0);
+  const [chemResult, setChemResult] = useState(true);
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
 
-
-
-
-  const keys = [
-    ['\\sin', '\\cos', '\\tan', '\\cot', '\\sec', '\\csc', '\\arcsin', '\\arccos', '\\arctan'],
-    ['\\text{acot}', '\\text{asec}', '\\text{acsc}', '\\log', '\\ln', '\\exp', '\\sqrt{}', '\\sqrt[3]{}', '\\sqrt[4]{}'],
-    ['x^n', 'x^2', 'x^3', '\\int', '\\iint', '\\iiint', '\\oint', '\\oiint', '\\oiiint', '\\nabla', '\\Delta', '\\partial'],
-    ['(', ')', '[', ']', '{}', '\\pi', '\\text{e}', '\\varphi', '\\gamma', '\\phi', '\\theta', '\\lambda', '\\mu', '\\nu'],
-    ['\\rho', '\\sigma', '\\tau', '\\omega', '<', '>', '\\neq', '\\approx', '\\cong', '\\equiv', '\\not\\equiv'],
-    ['\\prec', '\\succ', '\\preceq', '\\succeq', '\\in', '\\notin', '\\ni', '\\not\\ni', '\\subset', '\\supset'],
-    ['\\subseteq', '\\supseteq', '\\nsubseteq', '\\nsupseteq', '\\forall', '\\exists', '\\nexists', '\\land'],
-    ['\\lor', '\\neg', '\\implies', '\\iff', '%', '\\pm', '!', '^\\circ', '\\div', '\\times'],
-    ['\\cdot', '\\mp', '\\square\\mkern-10mu\\raisebox{0.3ex}{\\small{$\\scriptstyle\\langle$}}', '\\angle'],
-    ['\\measuredangle', '\\sphericalangle', '\\parallel', '\\nparallel', '\\mid', '\\perp', '\\infty'],
-    ['1', '2', '3',],
-    ['4', '5', '6', '+'],
-    ['7', '8', '9', '-'],
-    ['.', '0', '=', '*', '\u232b'],
-  ];
-
+  // const keys = [
+  //   ['\\sin', '\\cos', '\\tan', '\\cot', '\\sec', '\\csc', '\\arcsin', '\\arccos', '\\arctan'],
+  //   ['\\text{acot}', '\\text{asec}', '\\text{acsc}', '\\log', '\\ln', '\\exp', '\\sqrt{}', '\\sqrt[3]{}', '\\sqrt[4]{}'],
+  //   ['x^n', 'x^2', 'x^3', '\\int', '\\iint', '\\iiint', '\\oint', '\\oiint', '\\oiiint', '\\nabla', '\\Delta', '\\partial'],
+  //   ['(', ')', '[', ']', '{}', '\\pi', '\\text{e}', '\\varphi', '\\gamma', '\\phi', '\\theta', '\\lambda', '\\mu', '\\nu'],
+  //   ['\\rho', '\\sigma', '\\tau', '\\omega', '<', '>', '\\neq', '\\approx', '\\cong', '\\equiv', '\\not\\equiv'],
+  //   ['\\prec', '\\succ', '\\preceq', '\\succeq', '\\in', '\\notin', '\\ni', '\\not\\ni', '\\subset', '\\supset'],
+  //   ['\\subseteq', '\\supseteq', '\\nsubseteq', '\\nsupseteq', '\\forall', '\\exists', '\\nexists', '\\land'],
+  //   ['\\lor', '\\neg', '\\implies', '\\iff', '%', '\\pm', '!', '^\\circ', '\\div', '\\times'],
+  //   ['\\cdot', '\\mp', '\\square\\mkern-10mu\\raisebox{0.3ex}{\\small{$\\scriptstyle\\langle$}}', '\\angle'],
+  //   ['\\measuredangle', '\\sphericalangle', '\\parallel', '\\nparallel', '\\mid', '\\perp', '\\infty'],
+  //   ['1', '2', '3',],
+  //   ['4', '5', '6', '+'],
+  //   ['7', '8', '9', '-'],
+  //   ['.', '0', '=', '*', '\u232b'],
+  // ];
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const svgContent = `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" id="send" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line"><path id="secondary" d="M5.44,4.15l14.65,7a1,1,0,0,1,0,1.8l-14.65,7A1,1,0,0,1,4.1,18.54l2.72-6.13a1.06,1.06,0,0,0,0-.82L4.1,5.46A1,1,0,0,1,5.44,4.15Z" style="fill: rgb(44, 169, 188); stroke-width: 2;"></path><path id="primary" d="M7,12h4M4.1,5.46l2.72,6.13a1.06,1.06,0,0,1,0,.82L4.1,18.54a1,1,0,0,0,1.34,1.31l14.65-7a1,1,0,0,0,0-1.8L5.44,4.15A1,1,0,0,0,4.1,5.46Z" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path></svg>`;
 
   const toggleKeyboard = () => {
     setKeyboardVisible(!isKeyboardVisible);
   };
 
-
   useEffect(() => {
     const fetchConvertedValue = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('https://webhookforunity.onrender.com/convertedValue');
-        // const response = await axios.get('http://localhost:5000/convertedValue');
-        setConVal(response.data);
+        const response = await axios.get('http://localhost:5000/convertedValue');
+        console.log('Response data:', response.data.result1);
+        setConVal(response.data.result1); // Assign response data directly to conVal
         setReloadCount((prevCount) => prevCount + 1);
       } catch (error) {
         console.error('Error fetching converted value:', error);
       }
       setIsLoading(false);
     };
-
     fetchConvertedValue();
-    // const promptValueFetch = async () => {
-    //   try {
-    //     // const response = await axios.get('https://webhookforunity.onrender.com/convertedValue');
-    //     const response = await axios.get('http://localhost:5000/prompt');
-    //     setInputValue(response.data);
-    //   } catch (error) {
-    //     console.error('Error fetching converted value:', error);
-    //   }
-    // };
-
-    // promptValueFetch();
-
-    // const handleNewGeneration = (generation) => {
-    //   setConVal(generation);
-    //   setConvertedValues((prevConvertedValues) => [...prevConvertedValues, generation]);
-    // };
-
-    const showKeyboardState = localStorage.getItem('showKeyboard');
-    setShowKeyboard(showKeyboardState === 'true');
-    setPageReloaded(true);
-    if (showKeyboardState === 'true') {
-      window.addEventListener('beforeunload', handleBeforeUnload);
-    }
 
     const isAuthenticated = localStorage.getItem('authenticated');
     if (isAuthenticated) {
@@ -127,7 +99,6 @@ const App = () => {
 
     socket.on('convertedValue', (convertedValue) => {
       handleConvertedValue(convertedValue);
-      console.log(convertedValue, "this is the converted value...............////////////////");
     });
 
     socket.on('authenticated', () => {
@@ -177,90 +148,20 @@ const App = () => {
     setGenerations(true); // Show generations after converting the value
   };
 
-
   const handleChange = (event) => {
     setInput(event.target.value);
-    console.log("key pressed by the user ", input);
-
   };
+
   const handleConvertedValue = (convertedValue) => {
     setPrompt('');
     setShowPromptInput(true);
-    console.log(convertedValue, ".................//value of the converted value//................");
     setConvertedValues((prevConvertedValues) => [...prevConvertedValues, convertedValue]);
     setInputLatex(convertedValue);
 
-
-    // eslint-disable-next-line no-restricted-globals
     setTimeout(() => {
-      //   // eslint-disable-next-line no-restricted-globals
       window.location.reload();
     }, 5000);
-    // // Handle the converted
   };
-
-  const generateResponse = async () => {
-
-
-    const model = new Replicate({
-      model:
-        "daanelson/flan-t5:04e422a9b85baed86a4f24981d7f9953e20c5fd82f6103b74ebc431588e1cec8",
-      apiKey: "r8_Ke2nuK67FWxvekJ0MjNBC2lyBIV2Khz1JtHMG", // In Node.js defaults to process.env.REPLICATE_API_KEY
-    });
-    const res = await model.call(
-      "What would be a good company name a company that makes colorful socks?"
-    );
-    console.log({ res });
-  }
-  // generateResponse();
-
-  //   const model = new OpenAI({ openAIApiKey: "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", temperature: 0.9 });
-  //   const memory = new BufferMemory();
-  //   const chain = new ConversationChain({ llm: model, memory: memory });
-  //   const responses = [];
-
-  //   const res1 = await chain.call({ input: inputLatex });
-  //   responses.push(res1);
-
-  //   const res2 = await chain.call({ input: prompt });
-  //   responses.push(res2);
-
-  //   const res3 = await chain.call({ input: prompt });
-  //   responses.push(res3);
-
-  //   const res4 = await chain.call({ input: prompt });
-  //   responses.push(res4);
-
-  //   const res5 = await chain.call({ input: prompt });
-  //   responses.push(res5);
-
-  //   const res6 = await chain.call({ input: prompt });
-  //   responses.push(res6);
-
-  //   // Display the responses in the editor element
-  //   const editorElement = document.getElementById("editor");
-  //   editorElement.innerHTML = ""; // Clear previous content
-
-  //   for (const response of responses) {
-  //     const responseText = response.choices[0].text;
-  //     const responseElement = document.createElement("p");
-  //     responseElement.textContent = responseText;
-  //     editorElement.appendChild(responseElement);
-  //   }
-
-  // };
-
-  const handleSubmit = async () => {
-
-    console.log("Submit called..//")
-    generateResponse();
-    setShowPromptInput(true); // Show PromptInput again
-
-
-  };
-
-
-
 
   const authenticate = (code) => {
     setIsLoading(true);
@@ -268,45 +169,16 @@ const App = () => {
     socket.emit('authenticate', code);
     setTimeout(() => {
       setIsLoading(false);
-      //   // Proceed with the authentication logic
     }, 10000);
   };
-
 
   const openScientificKeyboard = () => {
     setShowScientificKeyboard(true);
   };
 
-  const convertValue = (value) => {
-    socket.emit('convertedValue', value);
-    setGenerations(true);
-    setTimeout(() => {
-      setShowPromptInput(true); // Hide the prompt field after reloading the page
-    }, 5000);
-
-    // Show generations after converting the value
-
-
-  };
-
-
-
   const closeScientificKeyboard = () => {
     setShowScientificKeyboard(false);
   };
-  const handleInputChange = (e) => {
-    setPrompt(e.target.value);
-
-  };
-  useEffect(() => {
-    if (showPromptInput) {
-      setTimeout(() => {
-        setShowPromptInput(true); // Hide the prompt field after reloading the page
-      }, 50000000);
-    }
-  }, [showPromptInput]);
-
-
 
   useEffect(() => {
     // Check if the response loaded successfully
@@ -316,16 +188,292 @@ const App = () => {
       setResponseLoaded(true);
     }
   }, [convertedValues]);
+
   const handleReload = () => {
-    window.location.reload(); // Reload the page
+    window.location.reload();
+  };
+
+  const handleRes2 = async () => {
+
+  };
+
+  const handleRes2Submit = () => {
+    handleRes2();
   };
 
 
+  //text input..............//...................
+  //--------------------------------
+  //--------------------------------
+  const [inputText, setInputText] = useState("");
+
+  const handleInputChange = (event) => {
+    setInputText(event.target.value);
+    console.log('InputText changed:', event.target.value);
+  };
+
+  const handleSubmit = async () => {
+    // Handle form submission
+    console.log("Input text:", inputText);
+    setIsLoading(true);
+    try {
+      const response = await axios.post('http://localhost:5000/res2', { prompt: inputText });
+      console.log('Response data:', response.data.res2);
+      setConVal(response.data.res2); // Assign response data directly to conVal
+      setReloadCount((prevCount) => prevCount + 1);
+    } catch (error) {
+      console.error('Error fetching converted value:', error);
+    }
+    setIsLoading(false);
+  };
+  const handleSend = async () => {
+    // Handle form submission
+    console.log('Input text:', inputText);
+    setIsLoading(true);
+    try {
+      const response = await axios.post('http://localhost:5000/chemistryValue', { prompt: inputText });
+      console.log('Response data:', response.data);
+      setChemResult(response.data.chemResult1.response); // Assign response data to conVal
+      setReloadCount((prevCount) => prevCount + 1);
+    } catch (error) {
+      console.error('Error fetching converted value:', error);
+    }
+    setIsLoading(false);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // Prevent the default form submission
+      handleSubmit();
+    }
+  };
+
+  const handleKeyEnter = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // Prevent the default form submission
+      handleSend();
+      console.log("Enter key pressed", inputText);
+    }
+  };
+
+  const handleKeyClick = (key) => {
+    if (key === "space") {
+      setInputText((prevInputText) => prevInputText + " ");
+    } else {
+      setInputText((prevInputText) => prevInputText + key);
+    }
+
+    console.log("..............//key pressed//...........", key);
+  };
+
+  const toggleScientificKeyboard = () => {
+    setShowScientificKeyboard((prevState) => !prevState);
+  };
+  const toggleChemistryKeyboard = () => {
+    setShowChemistryKeyboard((prevState) => !prevState);
+  };
+  const toggleMathKeyboard = () => {
+    setShowMathKeyboard((prevState) => !prevState);
+  };
+
+
+
+
   return (
-    <div style={{ background: "white", height: "100vh", maxWidth: "1000vh", alignItems: "center", justifyContent: "center" }}>
+    <div
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        height: '100vh',
+        maxWidth: '1000vh',
+        alignItems: 'center',
+        justifyContent: 'center',
+        display: 'flex',
+      }}
+    >
       {authenticated ? (
         <div>
-          <input
+
+
+          <button className='glow-on-hover'
+            onClick={toggleChemistryKeyboard}
+            style={{
+              color: 'black',
+              padding: '10px',
+              margin: '5px',
+              backgroundColor: 'beige',
+              borderRadius: '10px',
+              border: '2px solid black',
+              fontSize: '12px',
+            }}>            {showChemistryKeyboard ? 'Close ChemistryKeyboard' : 'Open  ChemistryKeyboard'}
+          </button>
+
+          {showChemistryKeyboard && (
+            <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+              <div style={{ background: 'lightgrey', padding: '20px', border: '1px solid black', margin: '0 auto', width: '100%' }}>
+                <h1>TypeIn or Use the Virtual ChemistryKeyboard</h1>
+                <p style={{ color: 'dark grey', fontFamily: 'cursive', fontSize: '24px', whiteSpace: 'pre-line', padding: '20px', border: '1px solid grey', background: 'white', margin: 0 }}>{chemResult}</p>
+                <div style={{ position: 'relative', width: '100%' }}>
+                  <input
+                    id="input-text"
+                    type="text"
+                    placeholder="Send a message"
+                    value={inputText}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyEnter}
+                    style={{ width: '100%', height: '100px', paddingRight: '50px', boxSizing: 'border-box', border: '2px solid black' }}
+                  />
+                  <button
+                    onClick={handleSend}
+                    style={{
+                      position: 'absolute',
+                      right: 0,
+                      top: '-30px',
+                      height: '100%',
+                      padding: '10px',
+                      width: '100px', // Adjust the width as needed
+                      background: 'none',
+                      border: 'none',
+                      transform: 'scaleY(-0.9) scaleX(1) rotate(-40deg)', // Flip the icon vertically
+                    }}
+                  >
+                    <span dangerouslySetInnerHTML={{ __html: svgContent }} />
+                    <span className="tooltip">Send</span>
+                  </button>
+                </div>
+                <ChemKeyboard handleKeyClick={handleKeyClick} />
+              </div>
+            </div>
+          )}
+
+
+          <button
+            className='glow-on-hover'
+            onClick={toggleScientificKeyboard}
+            style={{
+              color: 'black',
+              padding: '10px',
+              margin: '5px',
+              backgroundColor: 'beige',
+              borderRadius: '10px',
+              border: '2px solid black',
+              fontSize: '12px',
+            }}
+          >
+            {showScientificKeyboard ? 'Close Canvas' : 'Open Canvas'}
+          </button>
+          {showScientificKeyboard && (
+            <ScientificKeyboard
+              input={input}
+              setInput={setInput}
+              handleInput={handleInput}
+              setInputValue={setInputValue}
+              setConvertedValue={setConvertedValue}
+              canvasRef={canvasRef}
+              setIsLoading={setIsLoading}
+            />
+          )}
+          <button
+            className='glow-on-hover'
+            onClick={toggleMathKeyboard}
+            style={{
+              color: 'black',
+              padding: '10px',
+              margin: '5px',
+              backgroundColor: 'beige',
+              borderRadius: '10px',
+              border: '2px solid black',
+              fontSize: '12px',
+            }}
+          >
+            {showMathKeyboard ? 'Close MathKeyboard' : 'Open MathKeyboard'}
+          </button>
+
+          {!showScientificKeyboard && showMathKeyboard && (
+            <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+              <div style={{ background: 'antiquewhite', padding: '20px', border: '1px solid black', margin: '0 auto', width: '100%' }}>
+                <h1>Use Canvas as Input Prompt</h1>
+                <p style={{ color: 'dark grey', fontFamily: 'cursive', fontSize: '24px', whiteSpace: 'pre-line', padding: '20px', border: '1px solid grey', background: 'white', margin: 0 }}>{conVal}</p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
+                  <div style={{ position: 'relative', width: '100%' }}>
+                    <input
+                      id="input-text"
+                      type="text"
+                      placeholder="Send a message"
+                      value={inputText}
+                      onChange={handleInputChange}
+                      onKeyDown={handleKeyDown}
+                      style={{ width: '100%', height: '100px', paddingRight: '50px', boxSizing: 'border-box', border: '2px solid black' }}
+                    />
+                    <button
+                      onClick={handleSubmit}
+                      style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: "-30px",
+                        height: '100%',
+                        padding: '10px',
+                        width: '100px', // Adjust the width as needed
+                        background: 'none',
+                        border: 'none',
+                        transform: 'scaleY(-0.9) scaleX(1)  rotate(-40deg)', // Flip the icon vertically
+                      }}
+                    >
+                      <span dangerouslySetInnerHTML={{ __html: svgContent }} />
+                      <span className="tooltip">Send</span>
+                    </button>
+                  </div>
+                </div>
+                <LatKeyboard handleKeyClick={handleKeyClick} />
+              </div>
+            </div>
+          )}
+
+        </div>
+      ) : (
+        <div>
+          {showEnterCode ? (
+            <div>
+              <h2>Enter the authentication code:</h2>
+              <input
+                type="text"
+                value={authenticationCode}
+                onChange={(e) => setAuthenticationCode(e.target.value)}
+              />
+              <button
+                className='glow-on-hover' style={{ padding: "15px", margin: "10px", minWidth: "32px", backgroundColor: "beige", border: "1px solid black " }}
+                onClick={() => authenticate(authenticationCode)}
+              >
+                Authenticate
+              </button>
+              {isLoading && <div>Authenticating...</div>}
+            </div>
+          ) : (
+            <div>Authenticating...</div>
+          )}
+        </div>
+      )
+      }
+      <div style={{ textAlign: "center" }}>
+        {generations.map((generation, index) => (
+          <div key={index} style={{ marginTop: "10px" }}>
+            <div className="generation-text">
+              {generation.prompt}
+            </div>
+            <div className="generation-text">
+              {generation.response}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div >
+  );
+};
+
+export default App;
+{/* <input
             id="inputId"
             type="text"
             value={input}
@@ -333,52 +481,14 @@ const App = () => {
             style={{ padding: "11px", margin: "10px", width: "300px", border: "3px solid black" }}
             onClick={toggleKeyboard}
             onChange={handleChange}
-
           />
-          <button className='glow-on-hover' style={{ color: "black", padding: "20px", margin: "30px", minWidth: "32px", backgroundColor: "beige", border: "1px solid black " }} onClick={() => convertValue(convertedValue)}>
+          <button className='glow-on-hover' style={{ color: "black", padding: "20px", margin: "30px", minWidth: "32px", backgroundColor: "beige", border: "1px solid black " }} onClick={() => handleInput(convertedValue)}>
             Convert
-          </button>
-          <Select
-            className='glow-on-hover'
-            value={showScientificKeyboard ? 'open' : 'closed'}
-            onChange={(e) => (e.target.value === 'open' ? openScientificKeyboard() : closeScientificKeyboard())}
-            style={{ color: "black", padding: "0px", minWidth: "3px", margin: "5px", backgroundColor: "beige", borderRadius: "10px", border: "1px solid black ", fontSize: "10px" }}
-          >
-            Open Canvas
-            <MenuItem
-              className='glow-on-hover'
-              value="closed"
-              style={{
-                border: "1px solid black",
-                borderRadius: "10px",
-                margin: "10px",
-                padding: "5px",
-                fontSize: "7px",
-                lineHeight: "1",
-              }}
-            >
-              <span style={{ fontSize: "14px" }}>Scientific Keyboard (Close)</span>
-            </MenuItem>
-            <MenuItem
-              className='glow-on-hover'
-              value="open"
-              style={{
-                border: "1px solid black",
-                borderRadius: "10px",
-                margin: "10px",
-                padding: "5px",
-                fontSize: "7px",
-                lineHeight: "1",
-              }}
-            >
-              <span style={{ fontSize: "14px" }}>Scientific Keyboard (Open)</span>
-            </MenuItem>
-          </Select>
+          </button> */}
 
 
-
-          <div style={{ display: 'inline-block', position: 'relative' }}>
-            <IconButton
+{/* <div style={{ display: 'inline-block', position: 'relative' }}> */ }
+{/* <IconButton
               onClick={toggleKeyboard}
               color="default"
               style={{
@@ -409,8 +519,8 @@ const App = () => {
               ) : (
                 <KeyboardIcon style={{ fontSize: '30px', color: '#00ff00' }} />
               )}
-            </IconButton>
-            {isKeyboardVisible && (
+            </IconButton> */}
+{/* {isKeyboardVisible && (
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Grid container spacing={1} alignItems="center">
                   {keys.map((keyGroup, index) => (
@@ -451,7 +561,7 @@ const App = () => {
                                   color: '#00ff00',
                                 }}
                                 dangerouslySetInnerHTML={{ __html: katex.renderToString(symbol) }}
-                                className="button-text"
+                                className="button-key"
                               />
                             </IconButton>
                           </Tooltip>
@@ -461,92 +571,5 @@ const App = () => {
                   ))}
                 </Grid>
               </div>
-            )}
-          </div>
-
-
-
-
-          {showScientificKeyboard && (
-            // Render your scientific keyboard component here
-            <ScientificKeyboard
-              name="converted"
-              display="flex"
-              handleInput={handleInput}
-              handleConvertedValue={handleConvertedValue}
-              convertedValues={convertedValues} // Pass the convertedValues prop
-              conVal={conVal}
-              generations={generations}// Pass the generation prop
-
-
-            />
-          )}
-
-          {!showScientificKeyboard && (
-            <div style={{ justifyContent: 'center', alignItems: 'center', height: '250vh', animation: 'fadeIn 2s ease-in-out' }}>
-              <div style={{ background: 'antiquewhite', padding: '20px', border: '1px solid black' }}>
-                {conVal !== undefined ? (
-                  <p style={{ color: 'dark grey', fontFamily: 'cursive', fontSize: '24px', whiteSpace: 'pre-line' }}>{conVal}</p>
-                ) : (
-                  <div>Loading...</div>
-                )}
-              </div>
-            </div>
-          )}
-
-
-          {/* {showPromptInput && (
-            <div>
-              <input
-                type="text"
-                value={prompt}
-                onChange={handleInputChange}
-                placeholder="Enter your prompt"
-
-              />
-              <button className="glow-on-hover" onClick={handleSubmit} style={{ backgroundColor: "white", border: "2px solid black" }}>
-                Submit
-              </button>
-            </div>
-          )} */}
-
-
-
-
-        </div>
-      ) : (
-        <div>
-          {showEnterCode && (
-            <div>
-              {isLoading ? (
-                <div className="psoload">
-                  <div className="straight"></div>
-                  <div className="curve"></div>
-                  <div className="center"></div>
-                  <div className="inner"></div>
-                </div>
-              ) : (
-                <div className="wrapper">
-                  <p> {authenticationCode}</p>
-                  <div className="link_wrapper">
-                    <a onClick={() => authenticate(authenticationCode)}>!Authenticate</a>
-                    <div className="icon">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.832 268.832">
-                        <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z" />
-                      </svg>
-                    </div>
-                    <input type="text" placeholder="Shhhhh Key " style={{ height: "20px", padding: "15px" }} onChange={(e) => setAuthenticationCode(e.target.value)} />
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-      )
-      }
-    </div >
-  );
-};
-
-export default App;
+            )} */}
+{/* </div> */ }

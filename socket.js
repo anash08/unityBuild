@@ -33,6 +33,19 @@ io.use(sharedSession(sessionMiddleware, {
 
 app.use(express.static(path.resolve(__dirname, 'clientSocket', 'build')));
 
+// Function to send the converted value as a webhook to a specific URL
+function sendWebhook(convertedValue) {
+    const webhookURL = 'http://localhost:5000/webhook';
+    axios.post(webhookURL, { convertedValue })
+        .then((response) => {
+            const generations = response.data;
+            console.log('Webhook sent successfully', generations);
+        })
+        .catch((error) => {
+            console.error('Error sending webhook:', error.message);
+        });
+}
+
 // Generate a unique two-digit code for authentication
 const generateCode = () => {
     const min = 10; // Minimum two-digit number
@@ -88,23 +101,9 @@ io.on('connection', (socket) => {
     });
 });
 
-// Function to send the converted value as a webhook to a specific URL
-function sendWebhook(convertedValue) {
-    const webhookURL = 'https://webhookforunity.onrender.com/webhook';
-    // const webhookURL = 'http://localhost:5000/webhook';
-    axios.post(webhookURL, { convertedValue })
-        .then(response => {
-            const generations = response.data;
-            console.log('Webhook sent successfully', generations);
-        })
-        .catch(error => {
-            console.error('Error sending webhook:', error);
-        });
-}
-
 app.get('/', (req, res) => {
     console.log('Get request to Homepage');
-    res.send('Hi, sentby server...');
+    res.send('Hi, sent by server...');
 });
 
 app.get('*', (req, res) => {

@@ -49,6 +49,8 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
     const [authenticationCode, setAuthenticationCode] = useState('');
     const [showEnterCode, setShowEnterCode] = useState(true);
     const [responses, setResponses] = useState([]);
+    const svgContent = `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" id="send" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line"><path id="secondary" d="M5.44,4.15l14.65,7a1,1,0,0,1,0,1.8l-14.65,7A1,1,0,0,1,4.1,18.54l2.72-6.13a1.06,1.06,0,0,0,0-.82L4.1,5.46A1,1,0,0,1,5.44,4.15Z" style="fill: rgb(44, 169, 188); stroke-width: 2;"></path><path id="primary" d="M7,12h4M4.1,5.46l2.72,6.13a1.06,1.06,0,0,1,0,.82L4.1,18.54a1,1,0,0,0,1.34,1.31l14.65-7a1,1,0,0,0,0-1.8L5.44,4.15A1,1,0,0,0,4.1,5.46Z" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path></svg>`;
 
 
 
@@ -136,12 +138,12 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
         const handleConvert = () => {
 
             editorElement.editor.convert();
-            const convertedValue = resultElement.innerText; // Get the converted value
-            socket.emit('convertedValue', convertedValue);
-            console.log("the value of the converted Value the latex conversion........//,........", convertedValue) // Emit the converted value through the socket
-            handleConvertedValue(convertedValue);
-            console.log("Converted value", convertedValue);
-            generations(editorElement.editor)
+            // const convertedValue = resultElement.innerText; // Get the converted value
+            // socket.emit('convertedValue', convertedValue);
+            // console.log("the value of the converted Value the latex conversion........//,........", convertedValue) // Emit the converted value through the socket
+            // handleConvertedValue(convertedValue);
+            // console.log("Converted value", convertedValue);
+            // generations(editorElement.editor)
 
 
 
@@ -314,6 +316,14 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
     const handleSubmit = () => {
         socket.emit('userCode', userCode);
     };
+    const handleSend = () => {
+        const resultElement = document.getElementById('result');
+        const convertedValue = resultElement.innerText; // Get the converted value
+
+        socket.emit('convertedValue', convertedValue);
+        console.log('   sending userCode and convertedValue', convertedValue);
+
+    }
 
 
 
@@ -449,6 +459,25 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
             >
                 <h1 style={{ color: 'grey' }}>Write Here:</h1>
             </div>
+            <button
+                onClick={handleSend}
+                style={{
+                    position: 'absolute',
+                    right: 0,
+                    bottom: "-400px",
+
+
+                    padding: '50px',
+                    width: '250px', // Adjust the width as needed
+                    background: 'none',
+                    border: 'none',
+                    transform: '  rotate(-40deg)', // Flip the icon vertically
+                    float: 'right',
+                }}
+            >
+                <span dangerouslySetInnerHTML={{ __html: svgContent }} />
+
+            </button>
 
         </div>
     );

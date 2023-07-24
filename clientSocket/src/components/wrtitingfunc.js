@@ -320,7 +320,7 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
         const resultElement = document.getElementById('result');
         const convertedValue = resultElement.innerText; // Get the converted value
 
-        socket.emit('convertedValue', convertedValue);
+        socket.emit('convertedValue', { convertedValue });
         console.log('   sending userCode and convertedValue', convertedValue);
 
     }

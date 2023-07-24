@@ -76,7 +76,7 @@ const App = () => {
     const fetchConvertedValue = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/convertedValue');
+        const response = await axios.get('https://webhookforunity.onrender.com/convertedValue');
         console.log('Response data:', response.data.result1);
         setConVal(response.data.result1); // Assign response data directly to conVal
         setReloadCount((prevCount) => prevCount + 1);
@@ -160,8 +160,28 @@ const App = () => {
 
     setTimeout(() => {
       window.location.reload();
-    }, 5000);
+    }, 10000);
   };
+
+  const mathKeyboardButtonRef = useRef(null);
+
+  useEffect(() => {
+    // Check if it's the initial load after the page reload
+    const initialLoad = sessionStorage.getItem('initialLoad');
+    if (initialLoad === null) {
+      // If it's the initial load, set showMathKeyboard to true
+      setShowMathKeyboard(true);
+      // Mark the initial load in session storage
+      sessionStorage.setItem('initialLoad', 'true');
+    }
+  }, []);
+
+  useEffect(() => {
+    // When the reloadCount changes, open the MathKeyboard
+    if (reloadCount > 0) {
+      setShowMathKeyboard(true);
+    }
+  }, [reloadCount]);
 
   const authenticate = (code) => {
     setIsLoading(true);
@@ -217,7 +237,7 @@ const App = () => {
     console.log("Input text:", inputText);
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/res2', { prompt: inputText });
+      const response = await axios.post('https://webhookforunity.onrender.com/res2', { prompt: inputText });
       console.log('Response data:', response.data.res2);
       setConVal(response.data.res2); // Assign response data directly to conVal
       setReloadCount((prevCount) => prevCount + 1);
@@ -231,7 +251,7 @@ const App = () => {
     console.log('Input text:', inputText);
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/chemistryValue', { prompt: inputText });
+      const response = await axios.post('https://webhookforunity.onrender.com/chemistryValue', { prompt: inputText });
       console.log('Response data:', response.data);
       setChemResult(response.data.chemResult1.response); // Assign response data to conVal
       setReloadCount((prevCount) => prevCount + 1);
@@ -340,7 +360,7 @@ const App = () => {
                     }}
                   >
                     <span dangerouslySetInnerHTML={{ __html: svgContent }} />
-                    <span className="tooltip">Send</span>
+                    {/* <span className="tooltip">Send</span> */}
                   </button>
                 </div>
                 <ChemKeyboard handleKeyClick={handleKeyClick} />
@@ -349,21 +369,7 @@ const App = () => {
           )}
 
 
-          <button
-            className='glow-on-hover'
-            onClick={toggleScientificKeyboard}
-            style={{
-              color: 'black',
-              padding: '10px',
-              margin: '5px',
-              backgroundColor: 'beige',
-              borderRadius: '10px',
-              border: '2px solid black',
-              fontSize: '12px',
-            }}
-          >
-            {showScientificKeyboard ? 'Close Canvas' : 'Open Canvas'}
-          </button>
+
           {showScientificKeyboard && (
             <ScientificKeyboard
               input={input}
@@ -386,6 +392,7 @@ const App = () => {
               borderRadius: '10px',
               border: '2px solid black',
               fontSize: '12px',
+              float: 'left',
             }}
           >
             {showMathKeyboard ? 'Close MathKeyboard' : 'Open MathKeyboard'}
@@ -394,6 +401,23 @@ const App = () => {
           {!showScientificKeyboard && showMathKeyboard && (
             <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
               <div style={{ background: 'antiquewhite', padding: '20px', border: '1px solid black', margin: '0 auto', width: '100%' }}>
+                <button
+                  ref={mathKeyboardButtonRef}
+                  className='glow-on-hover'
+                  onClick={toggleScientificKeyboard}
+                  style={{
+                    color: 'black',
+                    padding: '10px',
+                    margin: '5px',
+                    backgroundColor: 'beige',
+                    borderRadius: '10px',
+                    border: '2px solid black',
+                    fontSize: '12px',
+                    float: "right"
+                  }}
+                >
+                  {showScientificKeyboard ? 'Close Canvas' : 'Open Canvas'}
+                </button>
                 <h1>Use Canvas as Input Prompt</h1>
                 <p style={{ color: 'dark grey', fontFamily: 'cursive', fontSize: '24px', whiteSpace: 'pre-line', padding: '20px', border: '1px solid grey', background: 'white', margin: 0 }}>{conVal}</p>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>

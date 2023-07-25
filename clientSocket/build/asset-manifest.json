@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.0c0337a8.css",
-    "main.js": "/static/js/main.c5571ffa.js",
+    "main.js": "/static/js/main.79721ab8.js",
     "static/media/KaTeX_AMS-Regular.ttf": "/static/media/KaTeX_AMS-Regular.853be92419a6c3766b9a.ttf",
     "static/media/KaTeX_Main-Regular.ttf": "/static/media/KaTeX_Main-Regular.9eba1d77abcf2aa6e94e.ttf",
     "static/media/KaTeX_Main-Bold.ttf": "/static/media/KaTeX_Main-Bold.8169508bf58f8bd92ad8.ttf",
@@ -66,10 +66,10 @@
     "static/media/undo-svgrepo-com.svg": "/static/media/undo-svgrepo-com.145f5e30a7814227f6e586deb8e1b084.svg",
     "static/media/redo-svgrepo-com.svg": "/static/media/redo-svgrepo-com.108dee98a399bfa935fff272e053eb97.svg",
     "main.0c0337a8.css.map": "/static/css/main.0c0337a8.css.map",
-    "main.c5571ffa.js.map": "/static/js/main.c5571ffa.js.map"
+    "main.79721ab8.js.map": "/static/js/main.79721ab8.js.map"
   },
   "entrypoints": [
     "static/css/main.0c0337a8.css",
-    "static/js/main.c5571ffa.js"
+    "static/js/main.79721ab8.js"
   ]
 }

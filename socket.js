@@ -13,7 +13,7 @@ const io = socketIO(server);
 const PORT = process.env.PORT || 9000;
 
 app.use(cors({
-    origin: ['https://unitysocketbuild.onrender.com', 'http://192.168.1.104:3000', 'http://localhost:5000'],
+    origin: ['https://unitysocketbuild.onrender.com', 'http://192.168.1.104:3000', 'http://localhost:5000', '172.20.10.1'],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -37,6 +37,7 @@ app.use(express.static(path.resolve(__dirname, 'clientSocket', 'build')));
 function sendWebhook(convertedValue) {
     console.log('............//the converted value from the client....', convertedValue);
     const webhookURL = 'https://webhookforunity.onrender.com/webhook';
+    // const webhookURL = 'http://localhost:5000/webhook';
     axios.post(webhookURL, { convertedValue })
         .then((response) => {
             const generations = response.data;

@@ -77,6 +77,7 @@ const App = () => {
       setIsLoading(true);
       try {
         const response = await axios.get('https://webhookforunity.onrender.com/convertedValue');
+        // const response = await axios.get('http://localhost:5000/convertedValue');
         console.log('Response data:', response.data.result1);
         setConVal(response.data.result1); // Assign response data directly to conVal
         setReloadCount((prevCount) => prevCount + 1);
@@ -288,6 +289,7 @@ const App = () => {
 
   const toggleScientificKeyboard = () => {
     setShowScientificKeyboard((prevState) => !prevState);
+
   };
   const toggleChemistryKeyboard = () => {
     setShowChemistryKeyboard((prevState) => !prevState);
@@ -446,7 +448,6 @@ const App = () => {
                       }}
                     >
                       <span dangerouslySetInnerHTML={{ __html: svgContent }} />
-                      <span className="tooltip">Send</span>
                     </button>
                   </div>
                 </div>

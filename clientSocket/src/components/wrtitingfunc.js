@@ -138,12 +138,12 @@ const ScientificKeyboard = ({ handleInput, handleConvertedValue, convertedValues
         const handleConvert = () => {
 
             editorElement.editor.convert();
-            // const convertedValue = resultElement.innerText; // Get the converted value
-            // socket.emit('convertedValue', convertedValue);
+            const convertedValue = resultElement.innerText; // Get the converted value
+            socket.emit('convertedValue', convertedValue);
             // console.log("the value of the converted Value the latex conversion........//,........", convertedValue) // Emit the converted value through the socket
             // handleConvertedValue(convertedValue);
             // console.log("Converted value", convertedValue);
-            // generations(editorElement.editor)
+            generations(editorElement.editor)
 
 
 

@@ -1,32 +1,39 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import ScientificKeyboard from './components/wrtitingfunc';
-import React, { useEffect, useState, useRef } from 'react';
-import io from 'socket.io-client';
-import './App.css';
-import QRCode from 'react-qr-code';
-import { QrReader } from 'react-qr-reader';
-import axios from 'axios';
-import { Button, Grid, MenuItem, Select, Tooltip } from '@mui/material';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import katex from 'katex';
-import KeyboardIcon from '@mui/icons-material/Keyboard';
-import IconButton from '@material-ui/core/IconButton';
+import ScientificKeyboard from "./components/wrtitingfunc";
+import React, { useEffect, useState, useRef } from "react";
+import io from "socket.io-client";
+import "./App.css";
+import QRCode from "react-qr-code";
+import { QrReader } from "react-qr-reader";
+import axios from "axios";
+import { Button, Grid, MenuItem, Select, Tooltip } from "@mui/material";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import katex from "katex";
+import KeyboardIcon from "@mui/icons-material/Keyboard";
+import IconButton from "@material-ui/core/IconButton";
 
-import KeyboardHideTwoToneIcon from '@mui/icons-material/KeyboardHideTwoTone';
-import LatKeyboard from './components/latexKeyboard';
-import mainApp from './main';
-import { BrowserRouter as Router, Route, Switch, Routes } from 'react-router-dom';
-import ChemKeyboard from './components/chemistry';
-import backgroundImage from '/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/robotteacher.jpeg';
+import KeyboardHideTwoToneIcon from "@mui/icons-material/KeyboardHideTwoTone";
+import LatKeyboard from "./components/latexKeyboard";
+import mainApp from "./main";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Routes,
+} from "react-router-dom";
+import ChemKeyboard from "./components/chemistry";
+import backgroundImage from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.jpg";
 
-const socket = io('https://unitysocketbuild.onrender.com/');
-// const socket = io('http://localhost:9000');
+const socket = io("https://unitysocketbuild.onrender.com/");
+// const socket = io("http://localhost:9000");
 const App = () => {
   const [conVal, setConVal] = useState(true);
-  const [inputValue, setInputValue] = useState('');
-  const [convertedValues, setConvertedValues] = useState(conVal !== null ? [conVal] : []);
+  const [inputValue, setInputValue] = useState("");
+  const [convertedValues, setConvertedValues] = useState(
+    conVal !== null ? [conVal] : []
+  );
   const [authenticated, setAuthenticated] = useState(false);
-  const [authenticationCode, setAuthenticationCode] = useState('');
+  const [authenticationCode, setAuthenticationCode] = useState("");
   const [showEnterCode, setShowEnterCode] = useState(true);
   const [pageReloaded, setPageReloaded] = useState(false);
   const [showKeyboard, setShowKeyboard] = useState(false);
@@ -34,18 +41,17 @@ const App = () => {
   const [showMathKeyboard, setShowMathKeyboard] = useState(false);
   const [showChemistryKeyboard, setShowChemistryKeyboard] = useState(false);
   const canvasRef = useRef(null);
-  const [convertedValue, setConvertedValue] = useState('');
+  const [convertedValue, setConvertedValue] = useState("");
   const [generations, setGenerations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState(" ");
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState("");
   const [showPromptInput, setShowPromptInput] = useState(false);
   const [inputLatex, setInputLatex] = useState(false);
   const [responseLoaded, setResponseLoaded] = useState(true);
   const [reloadCount, setReloadCount] = useState(0);
   const [chemResult, setChemResult] = useState(true);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
-
 
   // const keys = [
   //   ['\\sin', '\\cos', '\\tan', '\\cot', '\\sec', '\\csc', '\\arcsin', '\\arccos', '\\arctan'],
@@ -76,53 +82,57 @@ const App = () => {
     const fetchConvertedValue = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('https://webhookforunity.onrender.com/convertedValue');
-        // const response = await axios.get('http://localhost:5000/convertedValue');
-        console.log('Response data:', response.data.result1);
+        const response = await axios.get(
+          "https://webhookforunity.onrender.com/convertedValue"
+        );
+        // const response = await axios.get(
+        //   "http://localhost:5000/convertedValue"
+        // );
+        console.log("Response data:", response.data.result1);
         setConVal(response.data.result1); // Assign response data directly to conVal
         setReloadCount((prevCount) => prevCount + 1);
       } catch (error) {
-        console.error('Error fetching converted value:', error);
+        console.error("Error fetching converted value:", error);
       }
       setIsLoading(false);
     };
     fetchConvertedValue();
 
-    const isAuthenticated = localStorage.getItem('authenticated');
+    const isAuthenticated = localStorage.getItem("authenticated");
     if (isAuthenticated) {
       setAuthenticated(true);
       setShowEnterCode(false);
     }
 
-    socket.on('authenticationCode', (code) => {
+    socket.on("authenticationCode", (code) => {
       setAuthenticationCode(code);
     });
 
-    socket.on('convertedValue', (convertedValue) => {
+    socket.on("convertedValue", (convertedValue) => {
       handleConvertedValue(convertedValue);
     });
 
-    socket.on('authenticated', () => {
+    socket.on("authenticated", () => {
       setAuthenticated(true);
       setShowEnterCode(false);
-      localStorage.setItem('authenticated', true);
+      localStorage.setItem("authenticated", true);
     });
 
-    socket.on('newGeneration', (newGenerations) => {
+    socket.on("newGeneration", (newGenerations) => {
       setGenerations(newGenerations);
     });
 
-    socket.on('invalidCode', () => {
-      alert('Invalid authentication code. Please try again.');
+    socket.on("invalidCode", () => {
+      alert("Invalid authentication code. Please try again.");
     });
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
 
   const handleBeforeUnload = () => {
-    localStorage.setItem('showKeyboard', showKeyboard ? 'true' : 'false');
+    localStorage.setItem("showKeyboard", showKeyboard ? "true" : "false");
   };
 
   const handleInput = (value) => {
@@ -135,7 +145,7 @@ const App = () => {
 
     setInput(updatedInput);
 
-    if (value === '\u232b') {
+    if (value === "\u232b") {
       // Handle backspace action
       const updatedInput = input.slice(0, -1); // Remove the last character from the input
       setInput(updatedInput);
@@ -145,7 +155,7 @@ const App = () => {
     }
 
     // Send the updatedInput value to the server
-    socket.emit('convertedValue', updatedInput);
+    socket.emit("convertedValue", updatedInput);
     setGenerations(true); // Show generations after converting the value
   };
 
@@ -154,9 +164,12 @@ const App = () => {
   };
 
   const handleConvertedValue = (convertedValue) => {
-    setPrompt('');
+    setPrompt("");
     setShowPromptInput(true);
-    setConvertedValues((prevConvertedValues) => [...prevConvertedValues, convertedValue]);
+    setConvertedValues((prevConvertedValues) => [
+      ...prevConvertedValues,
+      convertedValue,
+    ]);
     setInputLatex(convertedValue);
 
     setTimeout(() => {
@@ -168,12 +181,12 @@ const App = () => {
 
   useEffect(() => {
     // Check if it's the initial load after the page reload
-    const initialLoad = sessionStorage.getItem('initialLoad');
+    const initialLoad = sessionStorage.getItem("initialLoad");
     if (initialLoad === null) {
       // If it's the initial load, set showMathKeyboard to true
       setShowMathKeyboard(true);
       // Mark the initial load in session storage
-      sessionStorage.setItem('initialLoad', 'true');
+      sessionStorage.setItem("initialLoad", "true");
     }
   }, []);
 
@@ -187,7 +200,7 @@ const App = () => {
   const authenticate = (code) => {
     setIsLoading(true);
 
-    socket.emit('authenticate', code);
+    socket.emit("authenticate", code);
     setTimeout(() => {
       setIsLoading(false);
     }, 10000);
@@ -214,14 +227,11 @@ const App = () => {
     window.location.reload();
   };
 
-  const handleRes2 = async () => {
-
-  };
+  const handleRes2 = async () => {};
 
   const handleRes2Submit = () => {
     handleRes2();
   };
-
 
   //text input..............//...................
   //--------------------------------
@@ -230,7 +240,7 @@ const App = () => {
 
   const handleInputChange = (event) => {
     setInputText(event.target.value);
-    console.log('InputText changed:', event.target.value);
+    console.log("InputText changed:", event.target.value);
   };
 
   const handleSubmit = async () => {
@@ -238,26 +248,34 @@ const App = () => {
     console.log("Input text:", inputText);
     setIsLoading(true);
     try {
-      const response = await axios.post('https://webhookforunity.onrender.com/res2', { prompt: inputText });
-      console.log('Response data:', response.data.res2);
+      const response = await axios.post(
+        "https://webhookforunity.onrender.com/res2",
+        {
+          prompt: inputText,
+        }
+      );
+      console.log("Response data:", response.data.res2);
       setConVal(response.data.res2); // Assign response data directly to conVal
       setReloadCount((prevCount) => prevCount + 1);
     } catch (error) {
-      console.error('Error fetching converted value:', error);
+      console.error("Error fetching converted value:", error);
     }
     setIsLoading(false);
   };
   const handleSend = async () => {
     // Handle form submission
-    console.log('Input text:', inputText);
+    console.log("Input text:", inputText);
     setIsLoading(true);
     try {
-      const response = await axios.post('https://webhookforunity.onrender.com/chemistryValue', { prompt: inputText });
-      console.log('Response data:', response.data);
+      const response = await axios.post(
+        "https://webhookforunity.onrender.com/chemistryValue",
+        { prompt: inputText }
+      );
+      console.log("Response data:", response.data);
       setChemResult(response.data.chemResult1.response); // Assign response data to conVal
       setReloadCount((prevCount) => prevCount + 1);
     } catch (error) {
-      console.error('Error fetching converted value:', error);
+      console.error("Error fetching converted value:", error);
     }
     setIsLoading(false);
   };
@@ -289,7 +307,6 @@ const App = () => {
 
   const toggleScientificKeyboard = () => {
     setShowScientificKeyboard((prevState) => !prevState);
-
   };
   const toggleChemistryKeyboard = () => {
     setShowChemistryKeyboard((prevState) => !prevState);
@@ -298,46 +315,77 @@ const App = () => {
     setShowMathKeyboard((prevState) => !prevState);
   };
 
-
-
-
   return (
     <div
+      className="Home-Background"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        height: '100vh',
-        maxWidth: '1000vh',
-        alignItems: 'center',
-        justifyContent: 'center',
-        display: 'flex',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        height: "100vh",
+        maxWidth: "1000vh",
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
       }}
     >
       {authenticated ? (
         <div>
-
-
-          <button className='glow-on-hover'
+          <button
+            className="glow-on-hover"
             onClick={toggleChemistryKeyboard}
             style={{
-              color: 'black',
-              padding: '10px',
-              margin: '5px',
-              backgroundColor: 'beige',
-              borderRadius: '10px',
-              border: '2px solid black',
-              fontSize: '12px',
-            }}>            {showChemistryKeyboard ? 'Close ChemistryKeyboard' : 'Open  ChemistryKeyboard'}
+              color: "black",
+              padding: "10px",
+              margin: "5px",
+              backgroundColor: "beige",
+              borderRadius: "10px",
+              border: "2px solid black",
+              fontSize: "12px",
+            }}
+          >
+            {" "}
+            {showChemistryKeyboard
+              ? "Close ChemistryKeyboard"
+              : "Open  ChemistryKeyboard"}
           </button>
 
           {showChemistryKeyboard && (
-            <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              <div style={{ background: 'lightgrey', padding: '20px', border: '1px solid black', margin: '0 auto', width: '100%' }}>
+            <div
+              style={{
+                height: "100vh",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  background: "lightgrey",
+                  padding: "20px",
+                  border: "1px solid black",
+                  margin: "0 auto",
+                  width: "100%",
+                }}
+              >
                 <h1>TypeIn or Use the Virtual ChemistryKeyboard</h1>
-                <p style={{ color: 'dark grey', fontFamily: 'cursive', fontSize: '24px', whiteSpace: 'pre-line', padding: '20px', border: '1px solid grey', background: 'white', margin: 0 }}>{chemResult}</p>
-                <div style={{ position: 'relative', width: '100%' }}>
+                <p
+                  style={{
+                    color: "dark grey",
+                    fontFamily: "cursive",
+                    fontSize: "24px",
+                    whiteSpace: "pre-line",
+                    padding: "20px",
+                    border: "1px solid grey",
+                    background: "white",
+                    margin: 0,
+                  }}
+                >
+                  {chemResult}
+                </p>
+                <div style={{ position: "relative", width: "100%" }}>
                   <input
                     id="input-text"
                     type="text"
@@ -345,20 +393,26 @@ const App = () => {
                     value={inputText}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyEnter}
-                    style={{ width: '100%', height: '100px', paddingRight: '50px', boxSizing: 'border-box', border: '2px solid black' }}
+                    style={{
+                      width: "100%",
+                      height: "100px",
+                      paddingRight: "50px",
+                      boxSizing: "border-box",
+                      border: "2px solid black",
+                    }}
                   />
                   <button
                     onClick={handleSend}
                     style={{
-                      position: 'absolute',
+                      position: "absolute",
                       right: 0,
-                      top: '-30px',
-                      height: '100%',
-                      padding: '10px',
-                      width: '100px', // Adjust the width as needed
-                      background: 'none',
-                      border: 'none',
-                      transform: 'scaleY(-0.9) scaleX(1) rotate(-40deg)', // Flip the icon vertically
+                      top: "-30px",
+                      height: "100%",
+                      padding: "10px",
+                      width: "100px", // Adjust the width as needed
+                      background: "none",
+                      border: "none",
+                      transform: "scaleY(-0.9) scaleX(1) rotate(-40deg)", // Flip the icon vertically
                     }}
                   >
                     <span dangerouslySetInnerHTML={{ __html: svgContent }} />
@@ -369,8 +423,6 @@ const App = () => {
               </div>
             </div>
           )}
-
-
 
           {showScientificKeyboard && (
             <ScientificKeyboard
@@ -384,46 +436,83 @@ const App = () => {
             />
           )}
           <button
-            className='glow-on-hover'
+            className="glow-on-hover"
             onClick={toggleMathKeyboard}
             style={{
-              color: 'black',
-              padding: '10px',
-              margin: '5px',
-              backgroundColor: 'beige',
-              borderRadius: '10px',
-              border: '2px solid black',
-              fontSize: '12px',
-              float: 'left',
+              color: "black",
+              padding: "10px",
+              margin: "5px",
+              backgroundColor: "beige",
+              borderRadius: "10px",
+              border: "2px solid black",
+              fontSize: "12px",
+              float: "left",
             }}
           >
-            {showMathKeyboard ? 'Close MathKeyboard' : 'Open MathKeyboard'}
+            {showMathKeyboard ? "Close MathKeyboard" : "Open MathKeyboard"}
           </button>
 
           {!showScientificKeyboard && showMathKeyboard && (
-            <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              <div style={{ background: 'antiquewhite', padding: '20px', border: '1px solid black', margin: '0 auto', width: '100%' }}>
+            <div
+              className="Keyboard-wrapper"
+              style={{
+                height: "100vh",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  background: "antiquewhite",
+                  padding: "20px",
+                  border: "1px solid black",
+                  margin: "0 auto",
+                  width: "100%",
+                }}
+              >
                 <button
                   ref={mathKeyboardButtonRef}
-                  className='glow-on-hover'
+                  className="glow-on-hover"
                   onClick={toggleScientificKeyboard}
                   style={{
-                    color: 'black',
-                    padding: '10px',
-                    margin: '5px',
-                    backgroundColor: 'beige',
-                    borderRadius: '10px',
-                    border: '2px solid black',
-                    fontSize: '12px',
-                    float: "right"
+                    color: "black",
+                    padding: "10px",
+                    margin: "5px",
+                    backgroundColor: "beige",
+                    borderRadius: "10px",
+                    border: "2px solid black",
+                    fontSize: "12px",
+                    float: "right",
                   }}
                 >
-                  {showScientificKeyboard ? 'Close Canvas' : 'Open Canvas'}
+                  {showScientificKeyboard ? "Close Canvas" : "Open Canvas"}
                 </button>
                 <h1>Use Canvas as Input Prompt</h1>
-                <p style={{ color: 'dark grey', fontFamily: 'cursive', fontSize: '24px', whiteSpace: 'pre-line', padding: '20px', border: '1px solid grey', background: 'white', margin: 0 }}>{conVal}</p>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
-                  <div style={{ position: 'relative', width: '100%' }}>
+                <p
+                  style={{
+                    color: "dark grey",
+                    fontFamily: "cursive",
+                    fontSize: "24px",
+                    whiteSpace: "pre-line",
+                    padding: "20px",
+                    border: "1px solid grey",
+                    background: "white",
+                    margin: 0,
+                  }}
+                >
+                  {conVal}
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginTop: "20px",
+                  }}
+                >
+                  <div style={{ position: "relative", width: "100%" }}>
                     <input
                       id="input-text"
                       type="text"
@@ -431,20 +520,26 @@ const App = () => {
                       value={inputText}
                       onChange={handleInputChange}
                       onKeyDown={handleKeyDown}
-                      style={{ width: '100%', height: '100px', paddingRight: '50px', boxSizing: 'border-box', border: '2px solid black' }}
+                      style={{
+                        width: "100%",
+                        height: "100px",
+                        paddingRight: "50px",
+                        boxSizing: "border-box",
+                        border: "2px solid black",
+                      }}
                     />
                     <button
                       onClick={handleSubmit}
                       style={{
-                        position: 'absolute',
+                        position: "absolute",
                         right: 0,
                         top: "-30px",
-                        height: '100%',
-                        padding: '10px',
-                        width: '100px', // Adjust the width as needed
-                        background: 'none',
-                        border: 'none',
-                        transform: 'scaleY(-0.9) scaleX(1)  rotate(-40deg)', // Flip the icon vertically
+                        height: "100%",
+                        padding: "10px",
+                        width: "100px", // Adjust the width as needed
+                        background: "none",
+                        border: "none",
+                        transform: "scaleY(-0.9) scaleX(1)  rotate(-40deg)", // Flip the icon vertically
                       }}
                     >
                       <span dangerouslySetInnerHTML={{ __html: svgContent }} />
@@ -455,7 +550,6 @@ const App = () => {
               </div>
             </div>
           )}
-
         </div>
       ) : (
         <div>
@@ -468,7 +562,14 @@ const App = () => {
                 onChange={(e) => setAuthenticationCode(e.target.value)}
               />
               <button
-                className='glow-on-hover' style={{ padding: "15px", margin: "10px", minWidth: "32px", backgroundColor: "beige", border: "1px solid black " }}
+                className="glow-on-hover"
+                style={{
+                  padding: "15px",
+                  margin: "10px",
+                  minWidth: "32px",
+                  backgroundColor: "beige",
+                  border: "1px solid black ",
+                }}
                 onClick={() => authenticate(authenticationCode)}
               >
                 Authenticate
@@ -479,26 +580,22 @@ const App = () => {
             <div>Authenticating...</div>
           )}
         </div>
-      )
-      }
+      )}
       <div style={{ textAlign: "center" }}>
         {generations.map((generation, index) => (
           <div key={index} style={{ marginTop: "10px" }}>
-            <div className="generation-text">
-              {generation.prompt}
-            </div>
-            <div className="generation-text">
-              {generation.response}
-            </div>
+            <div className="generation-text">{generation.prompt}</div>
+            <div className="generation-text">{generation.response}</div>
           </div>
         ))}
       </div>
-    </div >
+    </div>
   );
 };
 
 export default App;
-{/* <input
+{
+  /* <input
             id="inputId"
             type="text"
             value={input}
@@ -509,11 +606,14 @@ export default App;
           />
           <button className='glow-on-hover' style={{ color: "black", padding: "20px", margin: "30px", minWidth: "32px", backgroundColor: "beige", border: "1px solid black " }} onClick={() => handleInput(convertedValue)}>
             Convert
-          </button> */}
+          </button> */
+}
 
-
-{/* <div style={{ display: 'inline-block', position: 'relative' }}> */ }
-{/* <IconButton
+{
+  /* <div style={{ display: 'inline-block', position: 'relative' }}> */
+}
+{
+  /* <IconButton
               onClick={toggleKeyboard}
               color="default"
               style={{
@@ -544,8 +644,10 @@ export default App;
               ) : (
                 <KeyboardIcon style={{ fontSize: '30px', color: '#00ff00' }} />
               )}
-            </IconButton> */}
-{/* {isKeyboardVisible && (
+            </IconButton> */
+}
+{
+  /* {isKeyboardVisible && (
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Grid container spacing={1} alignItems="center">
                   {keys.map((keyGroup, index) => (
@@ -596,5 +698,8 @@ export default App;
                   ))}
                 </Grid>
               </div>
-            )} */}
-{/* </div> */ }
+            )} */
+}
+{
+  /* </div> */
+}

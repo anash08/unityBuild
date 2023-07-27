@@ -11,3 +11,142 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+html, body {
+  overflow-x: hidden;
+}
+#input-text{
+  width: 100%;
+  height: 100px;
+  padding-right: 50px;
+  box-sizing: border-box;
+}
+.math-input-wrap{
+  position: relative;
+  width: 100%;
+  background-color:#405992;
+  padding:20px;
+}
+.keyboard-primary-div div #input-text{
+  border-radius:35px;
+  background-color:#2c3f77;
+  border:none;
+}
+.sendbutton-wrap svg{
+  transform: scaleY(-0.9) scaleX(1) rotate(0deg);
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+path#secondary{
+  fill: rgb(255 255 255);
+}
+path#primary{
+  stroke: rgb(64 89 146);
+}
+.sendbutton-wrap {
+  background: #405992;
+  height: 70px;
+  width: 70px;
+  position: absolute;
+  border-radius: 50px;
+  right: 35px;
+  top: 35px;
+}
+.Home-Background{
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  max-width: 1000vh;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background-color: #21273b;
+}
+.keyboard-head{
+    color: #ffffff;
+    font-size: 24px;
+    line-height: 34px;
+    margin-bottom: 35px;
+}
+.keyboard-primary-div{
+  background: #2c3f77;
+  padding: 20px;
+  border: 1px solid black;
+  margin: 0 auto;
+  width: 100%;
+}
+.latexkeyboard button{
+  background: #405992;
+  border-radius: 8px;
+  padding: 10px;
+  border: none;
+  color: #fff;
+  -webkit-box-shadow: 0px 12px 1px -6px #172a4f;
+  -moz-box-shadow: 0px 12px 1px -6px rgba(23,42,79,1);
+  box-shadow: 0px 2px 1px 1px #172a4f;
+}
+.Keyboard-wrapper{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.para-wrap{
+    background: #405992;
+    padding: 20px;
+}
+.para-wrap p{
+  color: #ffffff;
+  font-family: cursive;
+  font-size: 24px;
+  white-space: pre-line;
+  padding: 20px;
+  border: 1px solid #172a4f;
+  background: #2c3f77;
+  margin: 0;
+  border-radius: 25px;
+}
+/*-----------------Mobile devices-media queries------------------------------------*/
+
+@media(max-width:480px){
+  .Home-Background{
+    display: block;
+    }
+  .Keyboard-wrapper{
+    position: relative;
+    width: 100%;
+    margin-top: 35px;
+    height:unset;
+  }
+  .Header-img-svg{
+    display:flex;
+    flex-direction:column;
+    background-color: #00BCD4;
+  }
+  .Header-img-svg svg{
+    height: 150px !important;
+    width: 100% !important;
+    padding-top: 35px;
+    text-align: left;
+    margin-bottom: 35px;
+    vertical-align: middle;
+  }
+  #animated-heading {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 38px;
+      flex: 5 0 50%;
+      margin: auto;
+      text-align: center;
+      padding-bottom: 35px;
+      color: #34345b !important;
+  }
+  .home-button-wrap{
+    display:flex;
+    flex-direction:row;
+    padding-top: 35px;
+  }
+  }
+  

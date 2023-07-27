@@ -22,10 +22,10 @@ import {
   Routes,
 } from "react-router-dom";
 import ChemKeyboard from "./components/chemistry";
-import backgroundImage from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.jpg";
+import backgroundImage from "D:/Projects/react/serverbuild-new/clientSocket/src/teacher.png";
 
-const socket = io("https://unitysocketbuild.onrender.com/");
-// const socket = io("http://localhost:9000");
+// const socket = io("https://unitysocketbuild.onrender.com/");
+const socket = io("http://localhost:9000");
 const App = () => {
   const [conVal, setConVal] = useState(true);
   const [inputValue, setInputValue] = useState("");
@@ -306,8 +306,14 @@ const App = () => {
   };
 
   const toggleScientificKeyboard = () => {
+    console.log("Toggle Scientific Keyboard");
     setShowScientificKeyboard((prevState) => !prevState);
   };
+  const canvasKeyboard = () => {
+    console.log("Toggle Scientific Keyboard");
+    setShowScientificKeyboard((prevState) => prevState);
+  };
+
   const toggleChemistryKeyboard = () => {
     setShowChemistryKeyboard((prevState) => !prevState);
   };
@@ -320,21 +326,126 @@ const App = () => {
       className="Home-Background"
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        height: "100vh",
-        maxWidth: "1000vh",
-        alignItems: "center",
-        justifyContent: "center",
-        display: "flex",
       }}
     >
-      {authenticated ? (
-        <div>
+      <div class="home-button-wrap">
+        <button
+          className="glow-on-hover"
+          onClick={toggleChemistryKeyboard}
+          style={{
+            color: "black",
+            padding: "10px",
+            margin: "5px",
+            backgroundColor: "beige",
+            borderRadius: "10px",
+            border: "2px solid black",
+            fontSize: "12px",
+          }}>
+          {" "}
+          {showChemistryKeyboard
+            ? "Close ChemistryKeyboard"
+            : "Open  ChemistryKeyboard"}
+        </button>
+
+        {showChemistryKeyboard && (
+          <div
+            style={{
+              height: "100vh",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                background: "lightgrey",
+                padding: "20px",
+                border: "1px solid black",
+                margin: "0 auto",
+                width: "100%",
+              }}
+            >
+              <h1>TypeIn or Use the Virtual ChemistryKeyboard</h1>
+              <p
+                style={{
+                  color: "dark grey",
+                  fontFamily: "cursive",
+                  fontSize: "24px",
+                  whiteSpace: "pre-line",
+                  padding: "20px",
+                  border: "1px solid grey",
+                  background: "white",
+                  margin: 0,
+                }}
+              >
+                {chemResult}
+              </p>
+              <div style={{ position: "relative", width: "100%" }}>
+                <input
+                  id="input-text"
+                  type="text"
+                  placeholder="Send a message"
+                  value={inputText}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyEnter}
+                />
+                <button
+                  onClick={handleSend}
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: "-30px",
+                    height: "100%",
+                    padding: "10px",
+                    width: "100px", // Adjust the width as needed
+                    background: "none",
+                    border: "none",
+                    transform: "scaleY(-0.9) scaleX(1) rotate(-40deg)", // Flip the icon vertically
+                  }}
+                >
+                  <span dangerouslySetInnerHTML={{ __html: svgContent }} />
+                  {/* <span className="tooltip">Send</span> */}
+                </button>
+              </div>
+              <ChemKeyboard handleKeyClick={handleKeyClick} />
+            </div>
+          </div>
+        )}
+
+        {showScientificKeyboard && (
+          <ScientificKeyboard
+            input={input}
+            setInput={setInput}
+            handleInput={handleInput}
+            setInputValue={setInputValue}
+            setConvertedValue={setConvertedValue}
+            canvasRef={canvasRef}
+            setIsLoading={setIsLoading}
+          />
+        )}
+        <button
+          className="glow-on-hover"
+          onClick={toggleMathKeyboard}
+          style={{
+            color: "black",
+            padding: "10px",
+            margin: "5px",
+            backgroundColor: "beige",
+            borderRadius: "10px",
+            border: "2px solid black",
+            fontSize: "12px",
+            float: "left",
+          }}
+        >
+          {showMathKeyboard ? "Close MathKeyboard" : "Open MathKeyboard"}
+        </button>
+
+        {showMathKeyboard && (
           <button
+            ref={mathKeyboardButtonRef}
             className="glow-on-hover"
-            onClick={toggleChemistryKeyboard}
+            onClick={toggleScientificKeyboard}
             style={{
               color: "black",
               padding: "10px",
@@ -343,217 +454,50 @@ const App = () => {
               borderRadius: "10px",
               border: "2px solid black",
               fontSize: "12px",
+              float: "right",
             }}
           >
-            {" "}
-            {showChemistryKeyboard
-              ? "Close ChemistryKeyboard"
-              : "Open  ChemistryKeyboard"}
+            {showScientificKeyboard ? "Close Canvas" : "Open Canvas"}
           </button>
+        )}
 
-          {showChemistryKeyboard && (
-            <div
-              style={{
-                height: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+      </div>
+      {!showScientificKeyboard && showMathKeyboard && (
+          <div className="Keyboard-wrapper">
+            <div class="keyboard-primary-div">
+              <h1 class="keyboard-head">Use Canvas as Input Prompt</h1>
+              <div class="para-wrap">
+              <p>{conVal}</p>
+              </div>
               <div
                 style={{
-                  background: "lightgrey",
-                  padding: "20px",
-                  border: "1px solid black",
-                  margin: "0 auto",
-                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: "20px",
                 }}
               >
-                <h1>TypeIn or Use the Virtual ChemistryKeyboard</h1>
-                <p
-                  style={{
-                    color: "dark grey",
-                    fontFamily: "cursive",
-                    fontSize: "24px",
-                    whiteSpace: "pre-line",
-                    padding: "20px",
-                    border: "1px solid grey",
-                    background: "white",
-                    margin: 0,
-                  }}
-                >
-                  {chemResult}
-                </p>
-                <div style={{ position: "relative", width: "100%" }}>
+                <div class="math-input-wrap">
                   <input
                     id="input-text"
                     type="text"
-                    placeholder="Send a message"
+                    placeholder=" Send a message"
                     value={inputText}
                     onChange={handleInputChange}
-                    onKeyDown={handleKeyEnter}
-                    style={{
-                      width: "100%",
-                      height: "100px",
-                      paddingRight: "50px",
-                      boxSizing: "border-box",
-                      border: "2px solid black",
-                    }}
+                    onKeyDown={handleKeyDown}
                   />
-                  <button
-                    onClick={handleSend}
-                    style={{
-                      position: "absolute",
-                      right: 0,
-                      top: "-30px",
-                      height: "100%",
-                      padding: "10px",
-                      width: "100px", // Adjust the width as needed
-                      background: "none",
-                      border: "none",
-                      transform: "scaleY(-0.9) scaleX(1) rotate(-40deg)", // Flip the icon vertically
-                    }}
-                  >
+                  <button class="sendbutton-wrap" onClick={handleSubmit}>
                     <span dangerouslySetInnerHTML={{ __html: svgContent }} />
-                    {/* <span className="tooltip">Send</span> */}
                   </button>
                 </div>
-                <ChemKeyboard handleKeyClick={handleKeyClick} />
               </div>
+              <LatKeyboard handleKeyClick={handleKeyClick} />
             </div>
-          )}
-
-          {showScientificKeyboard && (
-            <ScientificKeyboard
-              input={input}
-              setInput={setInput}
-              handleInput={handleInput}
-              setInputValue={setInputValue}
-              setConvertedValue={setConvertedValue}
-              canvasRef={canvasRef}
-              setIsLoading={setIsLoading}
-            />
-          )}
-          <button
-            className="glow-on-hover"
-            onClick={toggleMathKeyboard}
-            style={{
-              color: "black",
-              padding: "10px",
-              margin: "5px",
-              backgroundColor: "beige",
-              borderRadius: "10px",
-              border: "2px solid black",
-              fontSize: "12px",
-              float: "left",
-            }}
-          >
-            {showMathKeyboard ? "Close MathKeyboard" : "Open MathKeyboard"}
-          </button>
-
-          {!showScientificKeyboard && showMathKeyboard && (
-            <div
-              className="Keyboard-wrapper"
-              style={{
-                height: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  background: "antiquewhite",
-                  padding: "20px",
-                  border: "1px solid black",
-                  margin: "0 auto",
-                  width: "100%",
-                }}
-              >
-                <button
-                  ref={mathKeyboardButtonRef}
-                  className="glow-on-hover"
-                  onClick={toggleScientificKeyboard}
-                  style={{
-                    color: "black",
-                    padding: "10px",
-                    margin: "5px",
-                    backgroundColor: "beige",
-                    borderRadius: "10px",
-                    border: "2px solid black",
-                    fontSize: "12px",
-                    float: "right",
-                  }}
-                >
-                  {showScientificKeyboard ? "Close Canvas" : "Open Canvas"}
-                </button>
-                <h1>Use Canvas as Input Prompt</h1>
-                <p
-                  style={{
-                    color: "dark grey",
-                    fontFamily: "cursive",
-                    fontSize: "24px",
-                    whiteSpace: "pre-line",
-                    padding: "20px",
-                    border: "1px solid grey",
-                    background: "white",
-                    margin: 0,
-                  }}
-                >
-                  {conVal}
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginTop: "20px",
-                  }}
-                >
-                  <div style={{ position: "relative", width: "100%" }}>
-                    <input
-                      id="input-text"
-                      type="text"
-                      placeholder="Send a message"
-                      value={inputText}
-                      onChange={handleInputChange}
-                      onKeyDown={handleKeyDown}
-                      style={{
-                        width: "100%",
-                        height: "100px",
-                        paddingRight: "50px",
-                        boxSizing: "border-box",
-                        border: "2px solid black",
-                      }}
-                    />
-                    <button
-                      onClick={handleSubmit}
-                      style={{
-                        position: "absolute",
-                        right: 0,
-                        top: "-30px",
-                        height: "100%",
-                        padding: "10px",
-                        width: "100px", // Adjust the width as needed
-                        background: "none",
-                        border: "none",
-                        transform: "scaleY(-0.9) scaleX(1)  rotate(-40deg)", // Flip the icon vertically
-                      }}
-                    >
-                      <span dangerouslySetInnerHTML={{ __html: svgContent }} />
-                    </button>
-                  </div>
-                </div>
-                <LatKeyboard handleKeyClick={handleKeyClick} />
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+      )}
       ) : (
-        <div>
-          {showEnterCode ? (
+      <div>
+        {/* {showEnterCode ? (
             <div>
               <h2>Enter the authentication code:</h2>
               <input
@@ -578,9 +522,9 @@ const App = () => {
             </div>
           ) : (
             <div>Authenticating...</div>
-          )}
-        </div>
-      )}
+          )} */}
+      </div>
+      {/* )} */}
       <div style={{ textAlign: "center" }}>
         {generations.map((generation, index) => (
           <div key={index} style={{ marginTop: "10px" }}>

@@ -324,8 +324,8 @@ const App = () => {
     <div
       className="Home-Background"
       style={{
-        backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
+        backgroundImage: `url(${backgroundImage})`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         height: "100vh",

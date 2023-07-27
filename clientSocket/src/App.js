@@ -322,12 +322,9 @@ const App = () => {
   };
 
   return (
-    <div
-      className="Home-Background"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-      }}
-    >
+    <div>
+      {" "}
+      <h1 id="animated-heading">Learn, Practise & Explore</h1>
       <div class="home-button-wrap">
         <ul>
           <li>
@@ -473,42 +470,48 @@ const App = () => {
           )}
         </ul>
       </div>
-      {!showScientificKeyboard && showMathKeyboard && (
-        <div className="Keyboard-wrapper">
-          <div class="keyboard-primary-div">
-            <h1 class="keyboard-head">Use Canvas as Input Prompt</h1>
-            <div class="para-wrap">
-              <p>{conVal}</p>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: "20px",
-              }}
-            >
-              <div class="math-input-wrap">
-                <input
-                  id="input-text"
-                  type="text"
-                  placeholder=" Send a message"
-                  value={inputText}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                />
-                <button class="sendbutton-wrap" onClick={handleSubmit}>
-                  <span dangerouslySetInnerHTML={{ __html: svgContent }} />
-                </button>
+      <div
+        className="Home-Background"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+        }}
+      >
+        {!showScientificKeyboard && showMathKeyboard && (
+          <div className="Keyboard-wrapper">
+            <div class="keyboard-primary-div">
+              <h1 class="keyboard-head">Use Canvas as Input Prompt</h1>
+              <div class="para-wrap">
+                <p>{conVal}</p>
               </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: "20px",
+                }}
+              >
+                <div class="math-input-wrap">
+                  <input
+                    id="input-text"
+                    type="text"
+                    placeholder=" Send a message"
+                    value={inputText}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                  />
+                  <button class="sendbutton-wrap" onClick={handleSubmit}>
+                    <span dangerouslySetInnerHTML={{ __html: svgContent }} />
+                  </button>
+                </div>
+              </div>
+              <LatKeyboard handleKeyClick={handleKeyClick} />
             </div>
-            <LatKeyboard handleKeyClick={handleKeyClick} />
           </div>
-        </div>
-      )}
-      ) : (
-      <div>
-        {/* {showEnterCode ? (
+        )}
+        ) : (
+        <div>
+          {/* {showEnterCode ? (
             <div>
               <h2>Enter the authentication code:</h2>
               <input
@@ -534,15 +537,16 @@ const App = () => {
           ) : (
             <div>Authenticating...</div>
           )} */}
-      </div>
-      {/* )} */}
-      <div style={{ textAlign: "center" }}>
-        {generations.map((generation, index) => (
-          <div key={index} style={{ marginTop: "10px" }}>
-            <div className="generation-text">{generation.prompt}</div>
-            <div className="generation-text">{generation.response}</div>
-          </div>
-        ))}
+        </div>
+        {/* )} */}
+        <div style={{ textAlign: "center" }}>
+          {generations.map((generation, index) => (
+            <div key={index} style={{ marginTop: "10px" }}>
+              <div className="generation-text">{generation.prompt}</div>
+              <div className="generation-text">{generation.response}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

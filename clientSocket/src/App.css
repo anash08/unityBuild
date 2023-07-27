@@ -3,7 +3,12 @@
   text-align: center;
   /* color: "lightbrown" */
 }
-
+.input-latex {
+  background-color: grey;
+  height: 10vh;
+  font-size: 46px;
+  /* Adjust the font size as needed */
+}
 .blackboard {
   background-color: black;
   height: 300px;

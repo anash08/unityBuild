@@ -11,12 +11,30 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 const PORT = process.env.PORT || 9000;
+const allowedOrigins = [
+  "http://192.168.100.61:3000",
+  "http://192.168.100.78:3000",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);
 
 app.use(
   cors({
     origin: [
       "https://unitysocketbuild.onrender.com",
       "http://192.168.1.104:3000",
+      "http://192.168.100.61:3000",
+      "192.168.1.102",
       "http://localhost:5000",
       "172.20.10.1",
     ],
@@ -97,7 +115,7 @@ io.on("connection", (socket) => {
     // Check if the user is authenticated
     // if (socket.session.authenticated) {
     socket.broadcast.emit("convertedValue", convertedValue);
-    sendWebhook(convertedValue);
+    // sendWebhook(convertedValue);
     // } else {
     // socket.emit('unauthorized');
     // }

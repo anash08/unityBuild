@@ -11,3 +11,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+html,
+body {
+  overflow-x: hidden;
+}
+
+/*-----------------Mobile devices-media queries------------------------------------*/
+@media(max-width:480px) {
+  .Keyboard-wrapper {
+    position: absolute;
+    left: 0;
+    top: 100%;
+  }
+
+  .container {
+    background-color: #04A5FF;
+  }
+}

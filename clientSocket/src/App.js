@@ -24,8 +24,8 @@ import {
 import ChemKeyboard from "./components/chemistry";
 import backgroundImage from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.jpg";
 
-const socket = io("https://unitysocketbuild.onrender.com/");
-// const socket = io("http://localhost:9000");
+// const socket = io("https://unitysocketbuild.onrender.com/");
+const socket = io("http://192.168.100.59:9000");
 const App = () => {
   const [conVal, setConVal] = useState(true);
   const [inputValue, setInputValue] = useState("");
@@ -89,6 +89,8 @@ const App = () => {
         //   "http://localhost:5000/convertedValue"
         // );
         console.log("Response data:", response.data.result1);
+        console.log("authenticationCode: " + authenticationCode);
+
         setConVal(response.data.result1); // Assign response data directly to conVal
         setReloadCount((prevCount) => prevCount + 1);
       } catch (error) {
@@ -106,6 +108,7 @@ const App = () => {
 
     socket.on("authenticationCode", (code) => {
       setAuthenticationCode(code);
+      console.log("authenticationCode: " + code, authenticationCode);
     });
 
     socket.on("convertedValue", (convertedValue) => {
@@ -171,10 +174,6 @@ const App = () => {
       convertedValue,
     ]);
     setInputLatex(convertedValue);
-
-    setTimeout(() => {
-      window.location.reload();
-    }, 10000);
   };
 
   const mathKeyboardButtonRef = useRef(null);
@@ -306,8 +305,14 @@ const App = () => {
   };
 
   const toggleScientificKeyboard = () => {
+    console.log("Toggle Scientific Keyboard");
     setShowScientificKeyboard((prevState) => !prevState);
   };
+  const canvasKeyboard = () => {
+    console.log("Toggle Scientific Keyboard");
+    setShowScientificKeyboard((prevState) => prevState);
+  };
+
   const toggleChemistryKeyboard = () => {
     setShowChemistryKeyboard((prevState) => !prevState);
   };
@@ -332,24 +337,26 @@ const App = () => {
     >
       {authenticated ? (
         <div>
-          <button
-            className="glow-on-hover"
-            onClick={toggleChemistryKeyboard}
-            style={{
-              color: "black",
-              padding: "10px",
-              margin: "5px",
-              backgroundColor: "beige",
-              borderRadius: "10px",
-              border: "2px solid black",
-              fontSize: "12px",
-            }}
-          >
-            {" "}
-            {showChemistryKeyboard
-              ? "Close ChemistryKeyboard"
-              : "Open  ChemistryKeyboard"}
-          </button>
+          {!showMathKeyboard && (
+            <button
+              className="glow-on-hover"
+              onClick={toggleChemistryKeyboard}
+              style={{
+                color: "black",
+                padding: "10px",
+                margin: "5px",
+                backgroundColor: "beige",
+                borderRadius: "10px",
+                border: "2px solid black",
+                fontSize: "12px",
+              }}
+            >
+              {" "}
+              {showChemistryKeyboard
+                ? "Open ChemistryKeyboard"
+                : "Close ChemistryKeyboard"}
+            </button>
+          )}
 
           {showChemistryKeyboard && (
             <div
@@ -435,22 +442,44 @@ const App = () => {
               setIsLoading={setIsLoading}
             />
           )}
-          <button
-            className="glow-on-hover"
-            onClick={toggleMathKeyboard}
-            style={{
-              color: "black",
-              padding: "10px",
-              margin: "5px",
-              backgroundColor: "beige",
-              borderRadius: "10px",
-              border: "2px solid black",
-              fontSize: "12px",
-              float: "left",
-            }}
-          >
-            {showMathKeyboard ? "Close MathKeyboard" : "Open MathKeyboard"}
-          </button>
+          {!showChemistryKeyboard && (
+            <button
+              className="glow-on-hover"
+              onClick={toggleMathKeyboard}
+              style={{
+                color: "black",
+                padding: "10px",
+                margin: "5px",
+                backgroundColor: "beige",
+                borderRadius: "10px",
+                border: "2px solid black",
+                fontSize: "12px",
+                float: "left",
+              }}
+            >
+              {showMathKeyboard ? "Close MathKeyboard" : "Open MathKeyboard"}
+            </button>
+          )}
+
+          {showMathKeyboard && !showChemistryKeyboard && (
+            <button
+              ref={mathKeyboardButtonRef}
+              className="glow-on-hover"
+              onClick={toggleScientificKeyboard}
+              style={{
+                color: "black",
+                padding: "10px",
+                margin: "5px",
+                backgroundColor: "beige",
+                borderRadius: "10px",
+                border: "2px solid black",
+                fontSize: "12px",
+                float: "right",
+              }}
+            >
+              {showScientificKeyboard ? "Close Canvas" : "Open Canvas"}
+            </button>
+          )}
 
           {!showScientificKeyboard && showMathKeyboard && (
             <div
@@ -472,23 +501,6 @@ const App = () => {
                   width: "100%",
                 }}
               >
-                <button
-                  ref={mathKeyboardButtonRef}
-                  className="glow-on-hover"
-                  onClick={toggleScientificKeyboard}
-                  style={{
-                    color: "black",
-                    padding: "10px",
-                    margin: "5px",
-                    backgroundColor: "beige",
-                    borderRadius: "10px",
-                    border: "2px solid black",
-                    fontSize: "12px",
-                    float: "right",
-                  }}
-                >
-                  {showScientificKeyboard ? "Close Canvas" : "Open Canvas"}
-                </button>
                 <h1>Use Canvas as Input Prompt</h1>
                 <p
                   style={{
@@ -555,7 +567,7 @@ const App = () => {
         <div>
           {showEnterCode ? (
             <div>
-              <h2>Enter the authentication code:</h2>
+              <h2>Enter the authentication code:{authenticationCode}</h2>
               <input
                 type="text"
                 value={authenticationCode}

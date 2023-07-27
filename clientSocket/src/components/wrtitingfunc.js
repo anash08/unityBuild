@@ -26,8 +26,8 @@ import redoIcon from "../redo-svgrepo-com.svg"; // Import
 import "../App.css";
 import * as iink from "iink-js";
 
-const socket = io("https://unitysocketbuild.onrender.com");
-// const socket = io("http://localhost:9000");
+// const socket = io("https://unitysocketbuild.onrender.com");
+const socket = io("http://192.168.100.59:9000");
 
 const URL = "https://unitysocketbuild.onrender.com";
 //............................///..................................//
@@ -42,6 +42,7 @@ const ScientificKeyboard = ({
   const [outputValue, setOutputValue] = useState("");
   const [error, setError] = useState("");
   const [input, setInput] = useState("");
+  const [previousConvertedValues, setPreviousConvertedValues] = useState([]);
 
   const [resultValue, setresultValue] = useState("");
   const [penType, setPenType] = useState("PEN");
@@ -123,6 +124,12 @@ const ScientificKeyboard = ({
     const handleConvert = () => {
       editorElement.editor.convert();
       const convertedValue = resultElement.innerText; // Get the converted value
+      setPreviousConvertedValues((prevValues) => [
+        ...prevValues,
+        convertedValue,
+      ]);
+      // const symbols = katex.renderToString(convertedValue);
+
       socket.emit("convertedValue", convertedValue);
       // console.log("the value of the converted Value the latex conversion........//,........", convertedValue) // Emit the converted value through the socket
       // handleConvertedValue(convertedValue);
@@ -203,7 +210,6 @@ const ScientificKeyboard = ({
         },
       },
     });
-
     socket.on("convertedValue", (convertedValue) => {
       // Clear the editor element before rendering the converted value
       const editorElement = document.getElementById("editor");
@@ -213,7 +219,14 @@ const ScientificKeyboard = ({
       const renderedValue = katex.renderToString(convertedValue);
       const mathNode = document.createElement("div");
       mathNode.innerHTML = renderedValue;
+
       editorElement.appendChild(mathNode);
+      mathNode.style.fontSize = "70px";
+      mathNode.style.position = "fixed";
+      mathNode.style.zIndex = "9999"; // Higher value to bring it to the front
+      mathNode.style.right = "20%"; // Adjust the vertical position as needed
+      mathNode.style.bottom = "70%"; // Adjust the horizontal position as needed
+      mathNode.style.transform = "translate(-50%, -50%)";
 
       if (convertedValue.trim() === "") {
         editorElement.removeChild(mathNode);
@@ -222,18 +235,34 @@ const ScientificKeyboard = ({
       // Update the result element with the received converted value
       const resultElement = document.getElementById("result");
       resultElement.innerHTML = "";
+
+      try {
+        // Create a new container for the converted value
+        const convertedValueContainer = document.createElement("div");
+        convertedValueContainer.innerHTML = renderedValue;
+        convertedValueContainer.style.fontSize = "70px";
+        convertedValueContainer.style.marginRight = "10px"; // Adjust the spacing between converted values
+
+        // Append the container to the container for converted values
+        const convertedValuesContainer = document.getElementById(
+          "convertedValuesContainer"
+        );
+        convertedValuesContainer.appendChild(convertedValueContainer);
+      } catch (error) {
+        console.error("Error appending converted value:", error);
+      }
     });
 
     socket.on("clearScreen", () => {
       // Clear the editor element
-      const editorElement = document.getElementById("editor");
-      editorElement.innerHTML = "";
+      // const editorElement = document.getElementById("editor");
+      // editorElement.innerHTML = "";
 
       // Clear the result element
       const resultElement = document.getElementById("result");
       resultElement.innerHTML = "";
       // eslint-disable-next-line no-restricted-globals
-      location.reload();
+      // location.reload();
     });
 
     socket.on("authenticationCode", (code) => {
@@ -283,6 +312,13 @@ const ScientificKeyboard = ({
 
     socket.emit("convertedValue", { convertedValue });
     console.log("   sending userCode and convertedValue", convertedValue);
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 10000);
+  };
+  const handleSendButtonClick = () => {
+    console.log("..//Latex VAlue send button clicked..//");
   };
 
   return (
@@ -406,6 +442,7 @@ const ScientificKeyboard = ({
           </button>
         </nav>
       </div>
+
       <div
         id="editor"
         className="editor"
@@ -420,6 +457,52 @@ const ScientificKeyboard = ({
           border: "2px solid black", // Add a border with desired styles
         }}
       >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          id="convertedValuesContainer"
+        >
+          {/* Rendered converted values will go here */}
+        </div>
+
+        <div
+          className="Input-latex"
+          style={{
+            backgroundColor: "grey",
+            height: "10vh",
+            fontSize: "36px",
+            display: "flex",
+            alignItems: "center", // Align items vertically in the center
+            padding: "5px", // Add some padding to make it look like a text area
+          }}
+        >
+          <input
+            style={{
+              flex: "1", // Take up the available space
+              border: "none", // Remove border to make it look cleaner
+              outline: "none",
+              height: "55px", // Remove outline when focused
+            }}
+            value={previousConvertedValues.join(" ")}
+          />
+          <button
+            style={{
+              fontSize: "36px",
+              padding: "0 10px",
+              marginLeft: "10px", // Add some space between the input and button
+              backgroundColor: "transparent", // Remove button background
+              border: "none", // Remove button border
+            }}
+            onClick={handleSendButtonClick}
+          >
+            Send
+          </button>
+        </div>
+
         <h1 style={{ color: "grey" }}>Write Here:</h1>
       </div>
       <button

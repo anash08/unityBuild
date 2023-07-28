@@ -22,9 +22,12 @@ import {
   Routes,
 } from "react-router-dom";
 import ChemKeyboard from "./components/chemistry";
-import backgroundImage from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/teacher.png";
+// import backgroundImage from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/teacher.png";
+import backgroundImage from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.png";
+
 // "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.png";
-import logoimg from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/UnifyGPT-logo-300x55.png";
+// import logoimg from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/UnifyGPT-logo-300x55.png";
+import logoimg from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/UnifyGPT-logo-300x55.png";
 // "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/UnifyGPT-logo-300x55.png";
 
 // const socket = io("https://unitysocketbuild.onrender.com/");
@@ -55,23 +58,6 @@ const App = () => {
   const [reloadCount, setReloadCount] = useState(0);
   const [chemResult, setChemResult] = useState(true);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
-
-  // const keys = [
-  //   ['\\sin', '\\cos', '\\tan', '\\cot', '\\sec', '\\csc', '\\arcsin', '\\arccos', '\\arctan'],
-  //   ['\\text{acot}', '\\text{asec}', '\\text{acsc}', '\\log', '\\ln', '\\exp', '\\sqrt{}', '\\sqrt[3]{}', '\\sqrt[4]{}'],
-  //   ['x^n', 'x^2', 'x^3', '\\int', '\\iint', '\\iiint', '\\oint', '\\oiint', '\\oiiint', '\\nabla', '\\Delta', '\\partial'],
-  //   ['(', ')', '[', ']', '{}', '\\pi', '\\text{e}', '\\varphi', '\\gamma', '\\phi', '\\theta', '\\lambda', '\\mu', '\\nu'],
-  //   ['\\rho', '\\sigma', '\\tau', '\\omega', '<', '>', '\\neq', '\\approx', '\\cong', '\\equiv', '\\not\\equiv'],
-  //   ['\\prec', '\\succ', '\\preceq', '\\succeq', '\\in', '\\notin', '\\ni', '\\not\\ni', '\\subset', '\\supset'],
-  //   ['\\subseteq', '\\supseteq', '\\nsubseteq', '\\nsupseteq', '\\forall', '\\exists', '\\nexists', '\\land'],
-  //   ['\\lor', '\\neg', '\\implies', '\\iff', '%', '\\pm', '!', '^\\circ', '\\div', '\\times'],
-  //   ['\\cdot', '\\mp', '\\square\\mkern-10mu\\raisebox{0.3ex}{\\small{$\\scriptstyle\\langle$}}', '\\angle'],
-  //   ['\\measuredangle', '\\sphericalangle', '\\parallel', '\\nparallel', '\\mid', '\\perp', '\\infty'],
-  //   ['1', '2', '3',],
-  //   ['4', '5', '6', '+'],
-  //   ['7', '8', '9', '-'],
-  //   ['.', '0', '=', '*', '\u232b'],
-  // ];
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const svgContent = `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->

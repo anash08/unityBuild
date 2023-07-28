@@ -298,6 +298,7 @@ const App = () => {
     console.log("Toggle Scientific Keyboard");
     setShowScientificKeyboard((prevState) => !prevState);
   };
+
   const canvasKeyboard = () => {
     console.log("Toggle Scientific Keyboard");
     setShowScientificKeyboard((prevState) => prevState);
@@ -323,8 +324,7 @@ const App = () => {
               <a
                 href="#"
                 className="glow-on-hover"
-                onClick={toggleChemistryKeyboard}
-              >
+                onClick={toggleChemistryKeyboard}>
                 {" "}
                 {showChemistryKeyboard
                   ? "Close ChemistryKeyboard"
@@ -354,41 +354,29 @@ const App = () => {
             )}
           </ul>
         </div>
+</div>
+        <div
+        className="Home-Background"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+        }}>
+
         {showChemistryKeyboard && (
-          <div
-            style={{
-              height: "100vh",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <div className="Keyboard-wrapper">
+          <div class="keyboard-primary-div">
+            <h1 class="keyboard-head">TypeIn or Use the Virtual ChemistryKeyboard</h1>
+            <div class="para-wrap">
+            <p>{chemResult}</p>
+            </div>
             <div
-              style={{
-                background: "lightgrey",
-                padding: "20px",
-                border: "1px solid black",
-                margin: "0 auto",
-                width: "100%",
-              }}
-            >
-              <h1>TypeIn or Use the Virtual ChemistryKeyboard</h1>
-              <p
                 style={{
-                  color: "dark grey",
-                  fontFamily: "cursive",
-                  fontSize: "24px",
-                  whiteSpace: "pre-line",
-                  padding: "20px",
-                  border: "1px solid grey",
-                  background: "white",
-                  margin: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: "20px",
                 }}
               >
-                {chemResult}
-              </p>
-              <div style={{ position: "relative", width: "100%" }}>
+              <div class="chem-input-wrap">
                 <input
                   id="input-text"
                   type="text"
@@ -415,10 +403,12 @@ const App = () => {
                   {/* <span className="tooltip">Send</span> */}
                 </button>
               </div>
+              </div>
               <ChemKeyboard handleKeyClick={handleKeyClick} />
             </div>
           </div>
         )}
+        </div>
 
         {showScientificKeyboard && (
           <ScientificKeyboard
@@ -431,13 +421,12 @@ const App = () => {
             setIsLoading={setIsLoading}
           />
         )}
-      </div>
+
       <div
         className="Home-Background"
         style={{
           backgroundImage: `url(${backgroundImage})`,
-        }}
-      >
+        }}>
         {!showScientificKeyboard && showMathKeyboard && (
           <div className="Keyboard-wrapper">
             <div class="keyboard-primary-div">
@@ -515,112 +504,3 @@ const App = () => {
 };
 
 export default App;
-{
-  /* <input
-            id="inputId"
-            type="text"
-            value={input}
-            placeholder="Enter key symbol"
-            style={{ padding: "11px", margin: "10px", width: "300px", border: "3px solid black" }}
-            onClick={toggleKeyboard}
-            onChange={handleChange}
-          />
-          <button className='glow-on-hover' style={{ color: "black", padding: "20px", margin: "30px", minWidth: "32px", backgroundColor: "beige", border: "1px solid black " }} onClick={() => handleInput(convertedValue)}>
-            Convert
-          </button> */
-}
-
-{
-  /* <div style={{ display: 'inline-block', position: 'relative' }}> */
-}
-{
-  /* <IconButton
-              onClick={toggleKeyboard}
-              color="default"
-              style={{
-                backgroundColor: isKeyboardVisible ? '#111' : '',
-                padding: '8px',
-                fontSize: '18px',
-                display: 'inline-block',
-                marginTop: '10px',
-              }}
-            >
-              {!responseLoaded && (
-                <div style={{ textAlign: 'center', color: 'red', marginTop: '10px' }}>
-                  Response failed to load. Please reload the page.
-                </div>
-              )}
-              <button
-                className='glow-on-hover' style={{
-                  color: "black", fontSize: "18px", padding: "8px", display: 'inline-block',
-                  margin: "30px", minWidth: "32px", backgroundColor: "beige", border: "1px solid black ",
-                }}
-
-                onClick={handleReload}
-              >
-                Reload
-              </button>
-              {isKeyboardVisible ? (
-                <KeyboardHideTwoToneIcon style={{ fontSize: '30px', color: '#00ff00' }} />
-              ) : (
-                <KeyboardIcon style={{ fontSize: '30px', color: '#00ff00' }} />
-              )}
-            </IconButton> */
-}
-{
-  /* {isKeyboardVisible && (
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Grid container spacing={1} alignItems="center">
-                  {keys.map((keyGroup, index) => (
-                    <Grid item key={index}>
-                      <ButtonGroup
-                        variant="contained"
-                        aria-label="symbol-group"
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          margin: '5px',
-                        }}
-                      >
-                        {keyGroup.map((symbol, index) => (
-                          <Tooltip key={index} title={symbol} placement="top" style={{ maxWidth: '100px' }}>
-                            <IconButton
-                              onClick={() => handleInput(symbol)}
-                              style={{
-                                backgroundColor: '#111',
-                                fontWeight: 'bold',
-                                padding: '4px',
-                                width: '32px',
-                                height: '32px',
-                                margin: '2px',
-                                color: '#00ff00',
-                              }}
-                            >
-                              <span
-                                style={{
-                                  fontWeight: 'bold',
-                                  fontSize: '8px',
-                                  fontOpticalSizing: 'vertical',
-                                  padding: '10px',
-                                  width: '32px',
-                                  height: '32px',
-                                  margin: '2px',
-                                  color: '#00ff00',
-                                }}
-                                dangerouslySetInnerHTML={{ __html: katex.renderToString(symbol) }}
-                                className="button-key"
-                              />
-                            </IconButton>
-                          </Tooltip>
-                        ))}
-                      </ButtonGroup>
-                    </Grid>
-                  ))}
-                </Grid>
-              </div>
-            )} */
-}
-{
-  /* </div> */
-}

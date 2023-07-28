@@ -27,7 +27,7 @@ import "../App.css";
 import * as iink from "iink-js";
 
 // const socket = io("https://unitysocketbuild.onrender.com");
-const socket = io("http://192.168.100.59:9000");
+const socket = io("http://localhost:9000");
 
 const URL = "https://unitysocketbuild.onrender.com";
 //............................///..................................//
@@ -41,7 +41,6 @@ const ScientificKeyboard = ({
 }) => {
   const [outputValue, setOutputValue] = useState("");
   const [error, setError] = useState("");
-  const [input, setInput] = useState("");
   const [previousConvertedValues, setPreviousConvertedValues] = useState([]);
 
   const [resultValue, setresultValue] = useState("");
@@ -317,8 +316,32 @@ const ScientificKeyboard = ({
       window.location.reload();
     }, 10000);
   };
+  const [input, setInput] = useState("");
+
   const handleSendButtonClick = () => {
-    console.log("..//Latex VAlue send button clicked..//");
+    const sendButton = document.getElementById("latex-input");
+    // setInput(sendButton.value);
+    const latexInputValue = sendButton.value;
+    console.log("..//Latex VAlue send button clicked..//", sendButton.value);
+    console.log(
+      "..//|||||||||||______ //////////////......//",
+      latexInputValue
+    );
+
+    // const webhookURL = "https://webhookforunity.onrender.com/webhook";
+    const webhookURL = "http://localhost:5000/webhook";
+    axios
+      .post(webhookURL, { latexInputValue })
+      .then((response) => {
+        const generations = response.data;
+        console.log("Webhook sent successfully", generations);
+        setInput(generations);
+        // eslint-disable-next-line no-restricted-globals
+        location.reload();
+      })
+      .catch((error) => {
+        console.error("Error sending webhook:", error.message);
+      });
   };
 
   return (
@@ -481,6 +504,7 @@ const ScientificKeyboard = ({
           }}
         >
           <input
+            id="latex-input"
             style={{
               flex: "1", // Take up the available space
               border: "none", // Remove border to make it look cleaner

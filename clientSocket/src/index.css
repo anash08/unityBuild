@@ -66,8 +66,7 @@ path#primary {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 100vh;
-  max-width: 1000vh;
+  width:100%;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -124,14 +123,27 @@ path#primary {
   margin: 0;
   border-radius: 25px;
 }
-
+.header{
+  display:flex;
+  flex-direction:row;
+}
+.home-button-wrap ul{
+  display:flex;
+  flex-direction:row;
+  list-style:none;
+}
 /*-----------------Mobile devices-media queries------------------------------------*/
 
 @media(max-width:480px) {
+  .header{
+    flex-direction:column;
+  }
+  .home-button-wrap ul{
+    flex-direction:column;
+  }
   .Home-Background {
     display: block;
   }
-
   .Keyboard-wrapper {
     position: relative;
     width: 100%;
@@ -142,7 +154,6 @@ path#primary {
   .Header-img-svg {
     display: flex;
     flex-direction: column;
-    background-color: #00BCD4;
   }
 
   .Header-img-svg svg {

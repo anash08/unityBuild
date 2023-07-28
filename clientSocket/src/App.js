@@ -22,7 +22,8 @@ import {
   Routes,
 } from "react-router-dom";
 import ChemKeyboard from "./components/chemistry";
-import backgroundImage from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.png";
+import backgroundImage from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/teacher.png";
+import logoimg from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/UnifyGPT-logo-300x55.png";
 
 // const socket = io("https://unitysocketbuild.onrender.com/");
 const socket = io("http://localhost:9000");
@@ -324,31 +325,43 @@ const App = () => {
   return (
     <div>
       {" "}
-      <h1 id="animated-heading">Learn, Practise & Explore</h1>
-      <div class="home-button-wrap">
+  <div class="header">
+  <div class="Header-img-svg">
+      <img src={logoimg} />
+  </div>
+  <div class="home-button-wrap">
         <ul>
           <li>
             <a
               href="#"
               className="glow-on-hover"
-              onClick={toggleChemistryKeyboard}
-              style={{
-                color: "black",
-                padding: "10px",
-                margin: "5px",
-                backgroundColor: "beige",
-                borderRadius: "10px",
-                border: "2px solid black",
-                fontSize: "12px",
-              }}
-            >
+              onClick={toggleChemistryKeyboard}>
               {" "}
               {showChemistryKeyboard
-                ? "Close ChemistryKeyboard"
-                : "Open  ChemistryKeyboard"}
+                ? "Close ChemistryKeyboard" : "ChemistryKeyboard"}
             </a>
           </li>
-
+          <li>
+            <a
+              href="#"
+              className="glow-on-hover"
+              onClick={toggleMathKeyboard}>
+              {showMathKeyboard ? "Close MathKeyboard" : "MathKeyboard"}
+            </a>
+          </li>
+          {showMathKeyboard && (
+            <li>
+              <a
+                href="#"
+                ref={mathKeyboardButtonRef}
+                className="glow-on-hover"
+                onClick={toggleScientificKeyboard}>
+                {showScientificKeyboard ? "Close Canvas" : "Canvas"}
+              </a>
+            </li>
+          )}
+        </ul>
+</div>
           {showChemistryKeyboard && (
             <div
               style={{
@@ -404,8 +417,7 @@ const App = () => {
                       background: "none",
                       border: "none",
                       transform: "scaleY(-0.9) scaleX(1) rotate(-40deg)", // Flip the icon vertically
-                    }}
-                  >
+                    }}>
                     <span dangerouslySetInnerHTML={{ __html: svgContent }} />
                     {/* <span className="tooltip">Send</span> */}
                   </button>
@@ -426,49 +438,6 @@ const App = () => {
               setIsLoading={setIsLoading}
             />
           )}
-          <li>
-            <a
-              href="#"
-              className="glow-on-hover"
-              onClick={toggleMathKeyboard}
-              style={{
-                color: "black",
-                padding: "10px",
-                margin: "5px",
-                backgroundColor: "beige",
-                borderRadius: "10px",
-                border: "2px solid black",
-                fontSize: "12px",
-                float: "left",
-              }}
-            >
-              {showMathKeyboard ? "Close MathKeyboard" : "Open MathKeyboard"}
-            </a>
-          </li>
-
-          {showMathKeyboard && (
-            <li>
-              <a
-                href="#"
-                ref={mathKeyboardButtonRef}
-                className="glow-on-hover"
-                onClick={toggleScientificKeyboard}
-                style={{
-                  color: "black",
-                  padding: "10px",
-                  margin: "5px",
-                  backgroundColor: "beige",
-                  borderRadius: "10px",
-                  border: "2px solid black",
-                  fontSize: "12px",
-                  float: "right",
-                }}
-              >
-                {showScientificKeyboard ? "Close Canvas" : "Open Canvas"}
-              </a>
-            </li>
-          )}
-        </ul>
       </div>
       <div
         className="Home-Background"
@@ -509,7 +478,7 @@ const App = () => {
             </div>
           </div>
         )}
-        ) : (
+        ) : ( 
         <div>
           {/* {showEnterCode ? (
             <div>

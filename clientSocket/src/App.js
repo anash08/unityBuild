@@ -23,6 +23,7 @@ import {
 } from "react-router-dom";
 import ChemKeyboard from "./components/chemistry";
 import backgroundImage from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.png";
+import logoimg from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/UnifyGPT-logo-300x55.png";
 
 // const socket = io("https://unitysocketbuild.onrender.com/");
 const socket = io("http://localhost:9000");
@@ -53,6 +54,23 @@ const App = () => {
   const [chemResult, setChemResult] = useState(true);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
+  // const keys = [
+  //   ['\\sin', '\\cos', '\\tan', '\\cot', '\\sec', '\\csc', '\\arcsin', '\\arccos', '\\arctan'],
+  //   ['\\text{acot}', '\\text{asec}', '\\text{acsc}', '\\log', '\\ln', '\\exp', '\\sqrt{}', '\\sqrt[3]{}', '\\sqrt[4]{}'],
+  //   ['x^n', 'x^2', 'x^3', '\\int', '\\iint', '\\iiint', '\\oint', '\\oiint', '\\oiiint', '\\nabla', '\\Delta', '\\partial'],
+  //   ['(', ')', '[', ']', '{}', '\\pi', '\\text{e}', '\\varphi', '\\gamma', '\\phi', '\\theta', '\\lambda', '\\mu', '\\nu'],
+  //   ['\\rho', '\\sigma', '\\tau', '\\omega', '<', '>', '\\neq', '\\approx', '\\cong', '\\equiv', '\\not\\equiv'],
+  //   ['\\prec', '\\succ', '\\preceq', '\\succeq', '\\in', '\\notin', '\\ni', '\\not\\ni', '\\subset', '\\supset'],
+  //   ['\\subseteq', '\\supseteq', '\\nsubseteq', '\\nsupseteq', '\\forall', '\\exists', '\\nexists', '\\land'],
+  //   ['\\lor', '\\neg', '\\implies', '\\iff', '%', '\\pm', '!', '^\\circ', '\\div', '\\times'],
+  //   ['\\cdot', '\\mp', '\\square\\mkern-10mu\\raisebox{0.3ex}{\\small{$\\scriptstyle\\langle$}}', '\\angle'],
+  //   ['\\measuredangle', '\\sphericalangle', '\\parallel', '\\nparallel', '\\mid', '\\perp', '\\infty'],
+  //   ['1', '2', '3',],
+  //   ['4', '5', '6', '+'],
+  //   ['7', '8', '9', '-'],
+  //   ['.', '0', '=', '*', '\u232b'],
+  // ];
+
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const svgContent = `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
 <svg fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" id="send" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line"><path id="secondary" d="M5.44,4.15l14.65,7a1,1,0,0,1,0,1.8l-14.65,7A1,1,0,0,1,4.1,18.54l2.72-6.13a1.06,1.06,0,0,0,0-.82L4.1,5.46A1,1,0,0,1,5.44,4.15Z" style="fill: rgb(44, 169, 188); stroke-width: 2;"></path><path id="primary" d="M7,12h4M4.1,5.46l2.72,6.13a1.06,1.06,0,0,1,0,.82L4.1,18.54a1,1,0,0,0,1.34,1.31l14.65-7a1,1,0,0,0,0-1.8L5.44,4.15A1,1,0,0,0,4.1,5.46Z" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path></svg>`;
@@ -65,12 +83,12 @@ const App = () => {
     const fetchConvertedValue = async () => {
       setIsLoading(true);
       try {
-        // const response = await axios.get(
-        //   // "https://webhookforunity.onrender.com/convertedValue"
-        // );
         const response = await axios.get(
-          "http://localhost:5000/convertedValue"
+          "https://webhookforunity.onrender.com/convertedValue"
         );
+        // const response = await axios.get(
+        //   "http://localhost:5000/convertedValue"
+        // );
         console.log("Response data:", response.data.result1);
         setConVal(response.data.result1); // Assign response data directly to conVal
         setReloadCount((prevCount) => prevCount + 1);
@@ -232,8 +250,7 @@ const App = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        // "https://webhookforunity.onrender.com/res2",
-        "http://localhost:5000/res2",
+        "https://webhookforunity.onrender.com/res2",
         {
           prompt: inputText,
         }
@@ -242,7 +259,7 @@ const App = () => {
       setConVal(response.data.res2); // Assign response data directly to conVal
       setReloadCount((prevCount) => prevCount + 1);
     } catch (error) {
-      console.error("Error fetching coVo2 value:", error);
+      console.error("Error fetching converted value:", error);
     }
     setIsLoading(false);
   };
@@ -255,7 +272,6 @@ const App = () => {
         "https://webhookforunity.onrender.com/chemistryValue",
         { prompt: inputText }
       );
-
       console.log("Response data:", response.data);
       setChemResult(response.data.chemResult1.response); // Assign response data to conVal
       setReloadCount((prevCount) => prevCount + 1);
@@ -309,159 +325,131 @@ const App = () => {
   return (
     <div>
       {" "}
-      <h1 id="animated-heading">Learn, Practise & Explore</h1>
+      <div class="header">
+        <div class="Header-img-svg">
+          <img src={logoimg} />
+        </div>
+        <div class="home-button-wrap">
+          <ul>
+            <li>
+              <a
+                href="#"
+                className="glow-on-hover"
+                onClick={toggleChemistryKeyboard}
+              >
+                {" "}
+                {showChemistryKeyboard
+                  ? "Close ChemistryKeyboard"
+                  : "ChemistryKeyboard"}
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="glow-on-hover"
+                onClick={toggleMathKeyboard}
+              >
+                {showMathKeyboard ? "Close MathKeyboard" : "MathKeyboard"}
+              </a>
+            </li>
+            {showMathKeyboard && (
+              <li>
+                <a
+                  href="#"
+                  ref={mathKeyboardButtonRef}
+                  className="glow-on-hover"
+                  onClick={toggleScientificKeyboard}
+                >
+                  {showScientificKeyboard ? "Close Canvas" : "Canvas"}
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+        {showChemistryKeyboard && (
+          <div
+            style={{
+              height: "100vh",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                background: "lightgrey",
+                padding: "20px",
+                border: "1px solid black",
+                margin: "0 auto",
+                width: "100%",
+              }}
+            >
+              <h1>TypeIn or Use the Virtual ChemistryKeyboard</h1>
+              <p
+                style={{
+                  color: "dark grey",
+                  fontFamily: "cursive",
+                  fontSize: "24px",
+                  whiteSpace: "pre-line",
+                  padding: "20px",
+                  border: "1px solid grey",
+                  background: "white",
+                  margin: 0,
+                }}
+              >
+                {chemResult}
+              </p>
+              <div style={{ position: "relative", width: "100%" }}>
+                <input
+                  id="input-text"
+                  type="text"
+                  placeholder="Send a message"
+                  value={inputText}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyEnter}
+                />
+                <button
+                  onClick={handleSend}
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: "-30px",
+                    height: "100%",
+                    padding: "10px",
+                    width: "100px", // Adjust the width as needed
+                    background: "none",
+                    border: "none",
+                    transform: "scaleY(-0.9) scaleX(1) rotate(-40deg)", // Flip the icon vertically
+                  }}
+                >
+                  <span dangerouslySetInnerHTML={{ __html: svgContent }} />
+                  {/* <span className="tooltip">Send</span> */}
+                </button>
+              </div>
+              <ChemKeyboard handleKeyClick={handleKeyClick} />
+            </div>
+          </div>
+        )}
+
+        {showScientificKeyboard && (
+          <ScientificKeyboard
+            input={input}
+            setInput={setInput}
+            handleInput={handleInput}
+            setInputValue={setInputValue}
+            setConvertedValue={setConvertedValue}
+            canvasRef={canvasRef}
+            setIsLoading={setIsLoading}
+          />
+        )}
+      </div>
       <div
         className="Home-Background"
         style={{
           backgroundImage: `url(${backgroundImage})`,
         }}
       >
-        <div class="home-button-wrap">
-          <ul>
-            {!showMathKeyboard && (
-              <li>
-                <a
-                  href="#Chemistry"
-                  className="glow-on-hover"
-                  onClick={toggleChemistryKeyboard}
-                  style={{
-                    color: "black",
-                    padding: "10px",
-                    margin: "5px",
-                    backgroundColor: "beige",
-                    borderRadius: "10px",
-                    border: "2px solid black",
-                    fontSize: "12px",
-                  }}
-                >
-                  {showChemistryKeyboard
-                    ? "Close ChemKeyboard"
-                    : "Open ChemKeyboard"}
-                </a>
-              </li>
-            )}
-
-            {showChemistryKeyboard && (
-              <div
-                style={{
-                  height: "100vh",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <div
-                  style={{
-                    background: "lightgrey",
-                    padding: "20px",
-                    border: "1px solid black",
-                    margin: "0 auto",
-                    width: "100%",
-                  }}
-                >
-                  <h1>TypeIn or Use the Virtual ChemistryKeyboard</h1>
-                  <p
-                    style={{
-                      color: "dark grey",
-                      fontFamily: "cursive",
-                      fontSize: "24px",
-                      whiteSpace: "pre-line",
-                      padding: "20px",
-                      border: "1px solid grey",
-                      background: "white",
-                      margin: 0,
-                    }}
-                  >
-                    {chemResult}
-                  </p>
-                  <div style={{ position: "relative", width: "100%" }}>
-                    <input
-                      id="input-text"
-                      type="text"
-                      placeholder="Send a message"
-                      value={inputText}
-                      onChange={handleInputChange}
-                      onKeyDown={handleKeyEnter}
-                    />
-                    <button
-                      onClick={handleSend}
-                      style={{
-                        position: "absolute",
-                        right: 0,
-                        top: "-30px",
-                        height: "100%",
-                        padding: "10px",
-                        width: "100px", // Adjust the width as needed
-                        background: "none",
-                        border: "none",
-                        transform: "scaleY(-0.9) scaleX(1) rotate(-40deg)", // Flip the icon vertically
-                      }}
-                    >
-                      <span dangerouslySetInnerHTML={{ __html: svgContent }} />
-                      {/* <span className="tooltip">Send</span> */}
-                    </button>
-                  </div>
-                  <ChemKeyboard handleKeyClick={handleKeyClick} />
-                </div>
-              </div>
-            )}
-
-            {showScientificKeyboard && (
-              <ScientificKeyboard
-                input={input}
-                setInput={setInput}
-                handleInput={handleInput}
-                setInputValue={setInputValue}
-                setConvertedValue={setConvertedValue}
-                canvasRef={canvasRef}
-                setIsLoading={setIsLoading}
-              />
-            )}
-            <li>
-              <a
-                href="#MathKey"
-                className="glow-on-hover"
-                onClick={toggleMathKeyboard}
-                style={{
-                  color: "black",
-                  padding: "10px",
-                  margin: "5px",
-                  backgroundColor: "beige",
-                  borderRadius: "10px",
-                  border: "2px solid black",
-                  fontSize: "12px",
-                  float: "left",
-                }}
-              >
-                {showMathKeyboard ? "Close MathKeyboard" : "Open MathKeyboard"}
-              </a>
-            </li>
-
-            {showMathKeyboard && (
-              <li>
-                <a
-                  href="#MatKey/canvas"
-                  ref={mathKeyboardButtonRef}
-                  className="glow-on-hover"
-                  onClick={toggleScientificKeyboard}
-                  style={{
-                    color: "black",
-                    padding: "10px",
-                    margin: "5px",
-                    backgroundColor: "beige",
-                    borderRadius: "10px",
-                    border: "2px solid black",
-                    fontSize: "12px",
-                    float: "right",
-                  }}
-                >
-                  {showScientificKeyboard ? "Close Canvas" : "Open Canvas"}
-                </a>
-              </li>
-            )}
-          </ul>
-        </div>
         {!showScientificKeyboard && showMathKeyboard && (
           <div className="Keyboard-wrapper">
             <div class="keyboard-primary-div">

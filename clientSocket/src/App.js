@@ -441,7 +441,7 @@ const App = () => {
         {!showScientificKeyboard && showMathKeyboard && (
           <div className="Keyboard-wrapper">
             <div class="keyboard-primary-div">
-              <h1 class="keyboard-head">Use Canvas as Input Prompt</h1>
+              <h1 class="keyboard-head">Math Keyboard</h1>
               <div class="para-wrap">
                 <p>{conVal}</p>
               </div>

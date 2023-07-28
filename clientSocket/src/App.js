@@ -22,12 +22,12 @@ import {
   Routes,
 } from "react-router-dom";
 import ChemKeyboard from "./components/chemistry";
-// import backgroundImage from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/teacher.png";
-import backgroundImage from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.png";
+import backgroundImage from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/teacher.png";
+//import backgroundImage from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.png";
 
 // "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.png";
-// import logoimg from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/UnifyGPT-logo-300x55.png";
-import logoimg from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/UnifyGPT-logo-300x55.png";
+import logoimg from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/UnifyGPT-logo-300x55.png";
+//import logoimg from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/UnifyGPT-logo-300x55.png";
 // "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/UnifyGPT-logo-300x55.png";
 
 // const socket = io("https://unitysocketbuild.onrender.com/");

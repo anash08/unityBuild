@@ -23,7 +23,9 @@ import {
 } from "react-router-dom";
 import ChemKeyboard from "./components/chemistry";
 import backgroundImage from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/teacher.png";
+// "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.png";
 import logoimg from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/UnifyGPT-logo-300x55.png";
+// "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/UnifyGPT-logo-300x55.png";
 
 // const socket = io("https://unitysocketbuild.onrender.com/");
 const socket = io("http://localhost:9000");
@@ -325,119 +327,124 @@ const App = () => {
   return (
     <div>
       {" "}
-  <div class="header">
-  <div class="Header-img-svg">
-      <img src={logoimg} />
-  </div>
-  <div class="home-button-wrap">
-        <ul>
-          <li>
-            <a
-              href="#"
-              className="glow-on-hover"
-              onClick={toggleChemistryKeyboard}>
-              {" "}
-              {showChemistryKeyboard
-                ? "Close ChemistryKeyboard" : "ChemistryKeyboard"}
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="glow-on-hover"
-              onClick={toggleMathKeyboard}>
-              {showMathKeyboard ? "Close MathKeyboard" : "MathKeyboard"}
-            </a>
-          </li>
-          {showMathKeyboard && (
+      <div class="header">
+        <div class="Header-img-svg">
+          <img src={logoimg} />
+        </div>
+        <div class="home-button-wrap">
+          <ul>
             <li>
               <a
                 href="#"
-                ref={mathKeyboardButtonRef}
                 className="glow-on-hover"
-                onClick={toggleScientificKeyboard}>
-                {showScientificKeyboard ? "Close Canvas" : "Canvas"}
+                onClick={toggleChemistryKeyboard}
+              >
+                {" "}
+                {showChemistryKeyboard
+                  ? "Close ChemistryKeyboard"
+                  : "ChemistryKeyboard"}
               </a>
             </li>
-          )}
-        </ul>
-</div>
-          {showChemistryKeyboard && (
+            <li>
+              <a
+                href="#"
+                className="glow-on-hover"
+                onClick={toggleMathKeyboard}
+              >
+                {showMathKeyboard ? "Close MathKeyboard" : "MathKeyboard"}
+              </a>
+            </li>
+            {showMathKeyboard && (
+              <li>
+                <a
+                  href="#"
+                  ref={mathKeyboardButtonRef}
+                  className="glow-on-hover"
+                  onClick={toggleScientificKeyboard}
+                >
+                  {showScientificKeyboard ? "Close Canvas" : "Canvas"}
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+        {showChemistryKeyboard && (
+          <div
+            style={{
+              height: "100vh",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <div
               style={{
-                height: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
+                background: "lightgrey",
+                padding: "20px",
+                border: "1px solid black",
+                margin: "0 auto",
+                width: "100%",
               }}
             >
-              <div
+              <h1>TypeIn or Use the Virtual ChemistryKeyboard</h1>
+              <p
                 style={{
-                  background: "lightgrey",
+                  color: "dark grey",
+                  fontFamily: "cursive",
+                  fontSize: "24px",
+                  whiteSpace: "pre-line",
                   padding: "20px",
-                  border: "1px solid black",
-                  margin: "0 auto",
-                  width: "100%",
+                  border: "1px solid grey",
+                  background: "white",
+                  margin: 0,
                 }}
               >
-                <h1>TypeIn or Use the Virtual ChemistryKeyboard</h1>
-                <p
+                {chemResult}
+              </p>
+              <div style={{ position: "relative", width: "100%" }}>
+                <input
+                  id="input-text"
+                  type="text"
+                  placeholder="Send a message"
+                  value={inputText}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyEnter}
+                />
+                <button
+                  onClick={handleSend}
                   style={{
-                    color: "dark grey",
-                    fontFamily: "cursive",
-                    fontSize: "24px",
-                    whiteSpace: "pre-line",
-                    padding: "20px",
-                    border: "1px solid grey",
-                    background: "white",
-                    margin: 0,
+                    position: "absolute",
+                    right: 0,
+                    top: "-30px",
+                    height: "100%",
+                    padding: "10px",
+                    width: "100px", // Adjust the width as needed
+                    background: "none",
+                    border: "none",
+                    transform: "scaleY(-0.9) scaleX(1) rotate(-40deg)", // Flip the icon vertically
                   }}
                 >
-                  {chemResult}
-                </p>
-                <div style={{ position: "relative", width: "100%" }}>
-                  <input
-                    id="input-text"
-                    type="text"
-                    placeholder="Send a message"
-                    value={inputText}
-                    onChange={handleInputChange}
-                    onKeyDown={handleKeyEnter}
-                  />
-                  <button
-                    onClick={handleSend}
-                    style={{
-                      position: "absolute",
-                      right: 0,
-                      top: "-30px",
-                      height: "100%",
-                      padding: "10px",
-                      width: "100px", // Adjust the width as needed
-                      background: "none",
-                      border: "none",
-                      transform: "scaleY(-0.9) scaleX(1) rotate(-40deg)", // Flip the icon vertically
-                    }}>
-                    <span dangerouslySetInnerHTML={{ __html: svgContent }} />
-                    {/* <span className="tooltip">Send</span> */}
-                  </button>
-                </div>
-                <ChemKeyboard handleKeyClick={handleKeyClick} />
+                  <span dangerouslySetInnerHTML={{ __html: svgContent }} />
+                  {/* <span className="tooltip">Send</span> */}
+                </button>
               </div>
+              <ChemKeyboard handleKeyClick={handleKeyClick} />
             </div>
-          )}
+          </div>
+        )}
 
-          {showScientificKeyboard && (
-            <ScientificKeyboard
-              input={input}
-              setInput={setInput}
-              handleInput={handleInput}
-              setInputValue={setInputValue}
-              setConvertedValue={setConvertedValue}
-              canvasRef={canvasRef}
-              setIsLoading={setIsLoading}
-            />
-          )}
+        {showScientificKeyboard && (
+          <ScientificKeyboard
+            input={input}
+            setInput={setInput}
+            handleInput={handleInput}
+            setInputValue={setInputValue}
+            setConvertedValue={setConvertedValue}
+            canvasRef={canvasRef}
+            setIsLoading={setIsLoading}
+          />
+        )}
       </div>
       <div
         className="Home-Background"
@@ -478,7 +485,7 @@ const App = () => {
             </div>
           </div>
         )}
-        ) : ( 
+        ) : (
         <div>
           {/* {showEnterCode ? (
             <div>

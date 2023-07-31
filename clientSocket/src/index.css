@@ -104,11 +104,12 @@ path#primary {
 }
 
 .Keyboard-wrapper {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: block;
   align-items: center;
+  display: block;
+  align-items: center;
+  width: 100%;
+  margin-top: 35px;
 }
 
 .para-wrap {
@@ -129,6 +130,13 @@ path#primary {
 .header{
   display:flex;
   flex-direction:row;
+  justify-content: space-between;
+}
+.home-button-wrap{
+  margin-right:35px;
+}
+.home-button-wrap ul li{
+  margin: auto 15px;
 }
 .home-button-wrap ul{
   display:flex;
@@ -158,6 +166,8 @@ path#primary {
   }
   .home-button-wrap ul{
     flex-direction:column;
+    align-items: center;
+    padding-left: 0px;
   }
   .home-button-wrap ul li{
     margin-bottom:15px;

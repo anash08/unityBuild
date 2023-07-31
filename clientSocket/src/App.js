@@ -63,6 +63,13 @@ const App = () => {
   const svgContent = `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
 <svg fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" id="send" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line"><path id="secondary" d="M5.44,4.15l14.65,7a1,1,0,0,1,0,1.8l-14.65,7A1,1,0,0,1,4.1,18.54l2.72-6.13a1.06,1.06,0,0,0,0-.82L4.1,5.46A1,1,0,0,1,5.44,4.15Z" style="fill: rgb(44, 169, 188); stroke-width: 2;"></path><path id="primary" d="M7,12h4M4.1,5.46l2.72,6.13a1.06,1.06,0,0,1,0,.82L4.1,18.54a1,1,0,0,0,1.34,1.31l14.65-7a1,1,0,0,0,0-1.8L5.44,4.15A1,1,0,0,0,4.1,5.46Z" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path></svg>`;
 
+
+  const [activeComponent, setActiveComponent] = useState('math');
+
+  const toggleComponent = (component) => {
+    setActiveComponent(activeComponent === component ? null : component);
+  };
+
   const toggleKeyboard = () => {
     setKeyboardVisible(!isKeyboardVisible);
   };
@@ -320,48 +327,51 @@ const App = () => {
         </div>
         <div class="home-button-wrap">
           <ul>
+          {activeComponent === 'scientific' || activeComponent === 'math' ?
             <li>
               <a
                 href="#"
                 className="glow-on-hover"
-                onClick={toggleChemistryKeyboard}>
+                onClick={() => toggleComponent('chemistry')}>
                 {" "}
-                {showChemistryKeyboard
-                  ? "Close ChemistryKeyboard"
-                  : "ChemistryKeyboard"}
+                Chemistry Keyboard
               </a>
             </li>
+            :
+            ""
+          }
+          {activeComponent === 'chemistry' || activeComponent === 'scientific' ?
             <li>
               <a
                 href="#"
                 className="glow-on-hover"
-                onClick={toggleMathKeyboard}
-              >
-                {showMathKeyboard ? "Close MathKeyboard" : "MathKeyboard"}
+                onClick={() => toggleComponent('math')}>
+                MathKeyboard
               </a>
             </li>
-            {showMathKeyboard && (
+          : "" }
+            { activeComponent === 'chemistry' || activeComponent === 'math' ?
               <li>
                 <a
                   href="#"
                   ref={mathKeyboardButtonRef}
                   className="glow-on-hover"
-                  onClick={toggleScientificKeyboard}
-                >
-                  {showScientificKeyboard ? "Close Canvas" : "Canvas"}
+                  onClick={() => toggleComponent('scientific')}>
+                  Canvas
                 </a>
               </li>
-            )}
+              : ""
+            }
           </ul>
         </div>
-</div>
+    </div>
         <div
         className="Home-Background"
         style={{
           backgroundImage: `url(${backgroundImage})`,
         }}>
 
-        {showChemistryKeyboard && (
+        {activeComponent === 'chemistry' && (
           <div className="Keyboard-wrapper">
           <div class="keyboard-primary-div">
             <h1 class="keyboard-head">TypeIn or Use the Virtual ChemistryKeyboard</h1>
@@ -410,7 +420,8 @@ const App = () => {
         )}
         </div>
 
-        {showScientificKeyboard && (
+        {activeComponent === 'scientific' && (
+
           <ScientificKeyboard
             input={input}
             setInput={setInput}
@@ -427,7 +438,9 @@ const App = () => {
         style={{
           backgroundImage: `url(${backgroundImage})`,
         }}>
-        {!showScientificKeyboard && showMathKeyboard && (
+
+        {activeComponent === 'math' && (
+
           <div className="Keyboard-wrapper">
             <div class="keyboard-primary-div">
               <h1 class="keyboard-head">Math Keyboard</h1>

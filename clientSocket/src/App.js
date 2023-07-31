@@ -22,13 +22,11 @@ import {
   Routes,
 } from "react-router-dom";
 import ChemKeyboard from "./components/chemistry";
-import backgroundImage from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/teacher.png";
-//import backgroundImage from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.png";
+// import backgroundImage from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/teacher.png";
+import backgroundImage from "/home/vishnu/Keyboard/unityBuild/clientSocket/src/teacher.png";
 
-// "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/teacher.png";
-import logoimg from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/UnifyGPT-logo-300x55.png";
-//import logoimg from "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/UnifyGPT-logo-300x55.png";
-// "/home/user/WEB/MathKeyboard/serverbuild/clientSocket/src/UnifyGPT-logo-300x55.png";
+// import logoimg from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/UnifyGPT-logo-300x55.png";
+import logoimg from "/home/vishnu/Keyboard/unityBuild/clientSocket/src/UnifyGPT-logo-300x55.png";
 
 // const socket = io("https://unitysocketbuild.onrender.com/");
 const socket = io("http://localhost:9000");
@@ -320,200 +318,177 @@ const App = () => {
 
   return (
     <div>
-      {" "}
-      <div class="header">
-        <div class="Header-img-svg">
-          <img src={logoimg} />
-        </div>
-        <div class="home-button-wrap">
-          <ul>
-          {activeComponent === 'scientific' || activeComponent === 'math' ?
-            <li>
-              <a
-                href="#"
-                className="glow-on-hover"
-                onClick={() => toggleComponent('chemistry')}>
-                {" "}
-                Chemistry Keyboard
-              </a>
-            </li>
-            :
-            ""
-          }
-          {activeComponent === 'chemistry' || activeComponent === 'scientific' ?
-            <li>
-              <a
-                href="#"
-                className="glow-on-hover"
-                onClick={() => toggleComponent('math')}>
-                MathKeyboard
-              </a>
-            </li>
-          : "" }
-            { activeComponent === 'chemistry' || activeComponent === 'math' ?
-              <li>
-                <a
-                  href="#"
-                  ref={mathKeyboardButtonRef}
-                  className="glow-on-hover"
-                  onClick={() => toggleComponent('scientific')}>
-                  Canvas
-                </a>
-              </li>
-              : ""
-            }
-          </ul>
-        </div>
-    </div>
-        <div
-        className="Home-Background"
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-        }}>
-
-        {activeComponent === 'chemistry' && (
-          <div className="Keyboard-wrapper">
-          <div class="keyboard-primary-div">
-            <h1 class="keyboard-head">TypeIn or Use the Virtual ChemistryKeyboard</h1>
-            <div class="para-wrap">
-            <p>{chemResult}</p>
-            </div>
-            <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: "20px",
-                }}
-              >
-              <div class="chem-input-wrap">
-                <input
-                  id="input-text"
-                  type="text"
-                  placeholder="Send a message"
-                  value={inputText}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyEnter}
-                />
-                <button
-                  onClick={handleSend}
-                  style={{
-                    position: "absolute",
-                    right: 0,
-                    top: "-30px",
-                    height: "100%",
-                    padding: "10px",
-                    width: "100px", // Adjust the width as needed
-                    background: "none",
-                    border: "none",
-                    transform: "scaleY(-0.9) scaleX(1) rotate(-40deg)", // Flip the icon vertically
-                  }}
-                >
-                  <span dangerouslySetInnerHTML={{ __html: svgContent }} />
-                  {/* <span className="tooltip">Send</span> */}
-                </button>
-              </div>
-              </div>
-              <ChemKeyboard handleKeyClick={handleKeyClick} />
-            </div>
-          </div>
-        )}
-        </div>
-
-        {activeComponent === 'scientific' && (
-
-          <ScientificKeyboard
-            input={input}
-            setInput={setInput}
-            handleInput={handleInput}
-            setInputValue={setInputValue}
-            setConvertedValue={setConvertedValue}
-            canvasRef={canvasRef}
-            setIsLoading={setIsLoading}
+      {!authenticated ? (
+        <div>
+          <h2>Enter the authentication code:</h2>
+          <input
+            type="text"
+            value={authenticationCode}
+            onChange={(e) => setAuthenticationCode(e.target.value)}
           />
-        )}
-
-      <div
-        className="Home-Background"
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-        }}>
-
-        {activeComponent === 'math' && (
-
-          <div className="Keyboard-wrapper">
-            <div class="keyboard-primary-div">
-              <h1 class="keyboard-head">Math Keyboard</h1>
-              <div class="para-wrap">
-                <p>{conVal}</p>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: "20px",
-                }}
-              >
-                <div class="math-input-wrap">
-                  <input
-                    id="input-text"
-                    type="text"
-                    placeholder=" Send a message"
-                    value={inputText}
-                    onChange={handleInputChange}
-                    onKeyDown={handleKeyDown}
-                  />
-                  <button class="sendbutton-wrap" onClick={handleSubmit}>
-                    <span dangerouslySetInnerHTML={{ __html: svgContent }} />
-                  </button>
+          <button
+            className="glow-on-hover"
+            style={{
+              padding: "15px",
+              margin: "10px",
+              minWidth: "32px",
+              backgroundColor: "beige",
+              border: "1px solid black ",
+            }}
+            onClick={() => authenticate(authenticationCode)}
+          >
+            Authenticate
+          </button>
+          {isLoading && <div>Authenticating...</div>}
+        </div>
+      ) : (
+        <div>
+          {authenticated && (
+            <div>
+                <div class="header">
+                  <div class="Header-img-svg">
+                    <img src={logoimg} alt="Logo" />
+                  </div>
+                  <div class="home-button-wrap">
+                    <ul>
+                      {activeComponent === "scientific" || activeComponent === "math" ? (
+                        <li>
+                          <a
+                            href="#"
+                            className="glow-on-hover"
+                            onClick={() => toggleComponent("chemistry")}
+                          >
+                            Chemistry Keyboard
+                          </a>
+                        </li>
+                      ) : null}
+                      {activeComponent === "chemistry" || activeComponent === "scientific" ? (
+                        <li>
+                          <a
+                            href="#"
+                            className="glow-on-hover"
+                            onClick={() => toggleComponent("math")}
+                          >
+                            MathKeyboard
+                          </a>
+                        </li>
+                      ) : null}
+                      {activeComponent === "chemistry" || activeComponent === "math" ? (
+                        <li>
+                          <a
+                            href="#"
+                            ref={mathKeyboardButtonRef}
+                            className="glow-on-hover"
+                            onClick={() => toggleComponent("scientific")}
+                          >
+                            Canvas
+                          </a>
+                        </li>
+                      ) : null}
+                    </ul>
+                  </div>
+                </div>
+  
+              <div className="Home-Background" style={{ backgroundImage: `url(${backgroundImage})` }}>
+                {activeComponent === "chemistry" && (
+                  <div className="Keyboard-wrapper">
+                    <div class="keyboard-primary-div">
+                      <h1 class="keyboard-head">TypeIn or Use the Virtual ChemistryKeyboard</h1>
+                      <div class="para-wrap">
+                        <p>{chemResult}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "20px" }}>
+                        <div class="chem-input-wrap">
+                          <input
+                            id="input-text"
+                            type="text"
+                            placeholder="Send a message"
+                            value={inputText}
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyEnter}
+                          />
+                          <button
+                            onClick={handleSend}
+                            style={{
+                              position: "absolute",
+                              right: 0,
+                              top: "-30px",
+                              height: "100%",
+                              padding: "10px",
+                              width: "100px",
+                              background: "none",
+                              border: "none",
+                              transform: "scaleY(-0.9) scaleX(1) rotate(-40deg)",
+                            }}
+                          >
+                            <span dangerouslySetInnerHTML={{ __html: svgContent }} />
+                            {/* <span className="tooltip">Send</span> */}
+                          </button>
+                        </div>
+                      </div>
+                      <ChemKeyboard handleKeyClick={handleKeyClick} />
+                    </div>
+                  </div>
+                )}
+  
+                {activeComponent === "scientific" && (
+                  <div className="Keyboard-wrapper">
+                    <ScientificKeyboard
+                      input={input}
+                      setInput={setInput}
+                      handleInput={handleInput}
+                      setInputValue={setInputValue}
+                      setConvertedValue={setConvertedValue}
+                      canvasRef={canvasRef}
+                      setIsLoading={setIsLoading}
+                    />
+                  </div>
+                )}
+  
+                {activeComponent === "math" && (
+                  <div className="Keyboard-wrapper">
+                    <div class="keyboard-primary-div">
+                      <h1 class="keyboard-head">Math Keyboard</h1>
+                      <div class="para-wrap">
+                        <p>{conVal}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "20px" }}>
+                        <div class="math-input-wrap">
+                          <input
+                            id="input-text"
+                            type="text"
+                            placeholder=" Send a message"
+                            value={inputText}
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}
+                          />
+                          <button class="sendbutton-wrap" onClick={handleSubmit}>
+                            <span dangerouslySetInnerHTML={{ __html: svgContent }} />
+                          </button>
+                        </div>
+                      </div>
+                      <LatKeyboard handleKeyClick={handleKeyClick} />
+                    </div>
+                  </div>
+                )}
+  
+                <div style={{ textAlign: "center" }}>
+                  {generations.map((generation, index) => (
+                    <div key={index} style={{ marginTop: "10px" }}>
+                      <div className="generation-text">{generation.prompt}</div>
+                      <div className="generation-text">{generation.response}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <LatKeyboard handleKeyClick={handleKeyClick} />
             </div>
-          </div>
-        )}
-        ) : (
-        <div>
-          {/* {showEnterCode ? (
-            <div>
-              <h2>Enter the authentication code:</h2>
-              <input
-                type="text"
-                value={authenticationCode}
-                onChange={(e) => setAuthenticationCode(e.target.value)}
-              />
-              <button
-                className="glow-on-hover"
-                style={{
-                  padding: "15px",
-                  margin: "10px",
-                  minWidth: "32px",
-                  backgroundColor: "beige",
-                  border: "1px solid black ",
-                }}
-                onClick={() => authenticate(authenticationCode)}
-              >
-                Authenticate
-              </button>
-              {isLoading && <div>Authenticating...</div>}
-            </div>
-          ) : (
-            <div>Authenticating...</div>
-          )} */}
+          )}
         </div>
-        {/* )} */}
-        <div style={{ textAlign: "center" }}>
-          {generations.map((generation, index) => (
-            <div key={index} style={{ marginTop: "10px" }}>
-              <div className="generation-text">{generation.prompt}</div>
-              <div className="generation-text">{generation.response}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
+  
+  
 };
 
 export default App;

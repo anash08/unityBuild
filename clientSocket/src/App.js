@@ -1,26 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import './App.css'
+import '//unpkg.com/mathlive'
 import ScientificKeyboard from "./components/wrtitingfunc";
 import React, { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
-import "./App.css";
 import QRCode from "react-qr-code";
 import { QrReader } from "react-qr-reader";
 import axios from "axios";
-import { Button, Grid, MenuItem, Select, Tooltip } from "@mui/material";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import katex from "katex";
-import KeyboardIcon from "@mui/icons-material/Keyboard";
-import IconButton from "@material-ui/core/IconButton";
 
-import KeyboardHideTwoToneIcon from "@mui/icons-material/KeyboardHideTwoTone";
 import LatKeyboard from "./components/latexKeyboard";
-import mainApp from "./main";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Routes,
-} from "react-router-dom";
+
 import ChemKeyboard from "./components/chemistry";
 // import backgroundImage from "D:/Projects/react/ServerBuild-final/unityBuild/clientSocket/src/teacher.png";
 import backgroundImage from "/home/vishnu/Keyboard/unityBuild/clientSocket/src/teacher.png";
@@ -39,7 +29,6 @@ const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
   const [authenticationCode, setAuthenticationCode] = useState("");
   const [showEnterCode, setShowEnterCode] = useState(true);
-  const [pageReloaded, setPageReloaded] = useState(false);
   const [showKeyboard, setShowKeyboard] = useState(false);
   const [showScientificKeyboard, setShowScientificKeyboard] = useState(false);
   const [showMathKeyboard, setShowMathKeyboard] = useState(false);
@@ -55,22 +44,20 @@ const App = () => {
   const [responseLoaded, setResponseLoaded] = useState(true);
   const [reloadCount, setReloadCount] = useState(0);
   const [chemResult, setChemResult] = useState(true);
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const svgContent = `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
 <svg fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" id="send" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line"><path id="secondary" d="M5.44,4.15l14.65,7a1,1,0,0,1,0,1.8l-14.65,7A1,1,0,0,1,4.1,18.54l2.72-6.13a1.06,1.06,0,0,0,0-.82L4.1,5.46A1,1,0,0,1,5.44,4.15Z" style="fill: rgb(44, 169, 188); stroke-width: 2;"></path><path id="primary" d="M7,12h4M4.1,5.46l2.72,6.13a1.06,1.06,0,0,1,0,.82L4.1,18.54a1,1,0,0,0,1.34,1.31l14.65-7a1,1,0,0,0,0-1.8L5.44,4.15A1,1,0,0,0,4.1,5.46Z" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path></svg>`;
 
-
-  const [activeComponent, setActiveComponent] = useState('math');
+  const [activeComponent, setActiveComponent] = useState("math");
 
   const toggleComponent = (component) => {
     setActiveComponent(activeComponent === component ? null : component);
   };
 
-  const toggleKeyboard = () => {
-    setKeyboardVisible(!isKeyboardVisible);
-  };
+  // const toggleKeyboard = () => {
+  //   setKeyboardVisible(!isKeyboardVisible);
+  // };
 
   useEffect(() => {
     const fetchConvertedValue = async () => {
@@ -200,13 +187,7 @@ const App = () => {
     }, 10000);
   };
 
-  const openScientificKeyboard = () => {
-    setShowScientificKeyboard(true);
-  };
 
-  const closeScientificKeyboard = () => {
-    setShowScientificKeyboard(false);
-  };
 
   useEffect(() => {
     // Check if the response loaded successfully
@@ -217,15 +198,8 @@ const App = () => {
     }
   }, [convertedValues]);
 
-  const handleReload = () => {
-    window.location.reload();
-  };
 
-  const handleRes2 = async () => {};
 
-  const handleRes2Submit = () => {
-    handleRes2();
-  };
 
   //text input..............//...................
   //--------------------------------
@@ -298,23 +272,37 @@ const App = () => {
 
     console.log("..............//key pressed//...........", key);
   };
+  const [value, setValue] = useState("");
 
-  const toggleScientificKeyboard = () => {
-    console.log("Toggle Scientific Keyboard");
-    setShowScientificKeyboard((prevState) => !prevState);
-  };
+  // Customize the mathfield when it is mounted
+  const mf = useRef(null); // Initialize the ref with null
 
-  const canvasKeyboard = () => {
-    console.log("Toggle Scientific Keyboard");
-    setShowScientificKeyboard((prevState) => prevState);
-  };
+useEffect(() => {
+  // Check if the ref is not null before accessing its properties
+  if (mf.current) {
+    // Customize the mathfield when it is mounted
+    mf.current.smartFence = true;
 
-  const toggleChemistryKeyboard = () => {
-    setShowChemistryKeyboard((prevState) => !prevState);
-  };
-  const toggleMathKeyboard = () => {
-    setShowMathKeyboard((prevState) => !prevState);
-  };
+    // This could be an `onInput` handler, but this is an alternative
+    mf.current.addEventListener("input", (evt) => {
+      // When the return key is pressed, play a sound
+      if (evt.inputType === "insertLineBreak") {
+        // The mathfield is available as `evt.target`
+        // The mathfield can be controlled with `executeCommand`
+        // Read more: https://cortexjs.io/mathlive/guides/commands/
+        evt.target.executeCommand("plonk");
+      }
+    });
+  }
+}, []);
+
+// Update the mathfield when the value changes
+useEffect(() => {
+  // Check if the ref is not null before accessing its properties
+  if (mf.current) {
+    mf.current.value = value;
+  }
+}, [value]);
 
   return (
     <div>
@@ -345,59 +333,73 @@ const App = () => {
         <div>
           {authenticated && (
             <div>
-                <div class="header">
-                  <div class="Header-img-svg">
-                    <img src={logoimg} alt="Logo" />
-                  </div>
-                  <div class="home-button-wrap">
-                    <ul>
-                      {activeComponent === "scientific" || activeComponent === "math" ? (
-                        <li>
-                          <a
-                            href="#"
-                            className="glow-on-hover"
-                            onClick={() => toggleComponent("chemistry")}
-                          >
-                            Chemistry Keyboard
-                          </a>
-                        </li>
-                      ) : null}
-                      {activeComponent === "chemistry" || activeComponent === "scientific" ? (
-                        <li>
-                          <a
-                            href="#"
-                            className="glow-on-hover"
-                            onClick={() => toggleComponent("math")}
-                          >
-                            MathKeyboard
-                          </a>
-                        </li>
-                      ) : null}
-                      {activeComponent === "chemistry" || activeComponent === "math" ? (
-                        <li>
-                          <a
-                            href="#"
-                            ref={mathKeyboardButtonRef}
-                            className="glow-on-hover"
-                            onClick={() => toggleComponent("scientific")}
-                          >
-                            Canvas
-                          </a>
-                        </li>
-                      ) : null}
-                    </ul>
-                  </div>
+              <div class="header">
+                <div className="Header-img-svg">
+                  <a href="https://www.webtiga.com/unify-gpt/">
+                    <img className="logo-img" src={logoimg} alt="Logo" />
+                  </a>
                 </div>
-  
-              <div className="Home-Background" style={{ backgroundImage: `url(${backgroundImage})` }}>
+
+                <div class="home-button-wrap">
+                  <ul>
+                    {activeComponent === "scientific" ||
+                    activeComponent === "math" ? (
+                      <li>
+                        <a
+                          href="#"
+                          className="glow-on-hover"
+                          onClick={() => toggleComponent("chemistry")}
+                        >
+                          Chemistry Keyboard
+                        </a>
+                      </li>
+                    ) : null}
+                    {activeComponent === "chemistry" ||
+                    activeComponent === "scientific" ? (
+                      <li>
+                        <a
+                          href="#"
+                          className="glow-on-hover"
+                          onClick={() => toggleComponent("math")}
+                          backgroundColor=""
+                        >
+                          MathKeyboard
+                        </a>
+                      </li>
+                    ) : null}
+                    {activeComponent === "chemistry" ||
+                    activeComponent === "math" ? (
+                      <li>
+                        <a
+                          href="#"
+                          ref={mathKeyboardButtonRef}
+                          className="glow-on-hover"
+                          onClick={() => toggleComponent("scientific")}
+                        >
+                          Canvas
+                        </a>
+                      </li>
+                    ) : null}
+                  </ul>
+                </div>
+              </div>
+
+              <div>
                 {activeComponent === "chemistry" && (
                   <div className="Keyboard-wrapper">
                     <div class="keyboard-primary-div">
-                      <h1 class="keyboard-head">TypeIn or Use the Virtual ChemistryKeyboard</h1>
+                      <h1 class="keyboard-head"> ChemistryKeyboard</h1>
                       <div class="para-wrap">
                         <p>{chemResult}</p>
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "20px" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginTop: "20px",
+                        }}
+                      >
                         <div class="chem-input-wrap">
                           <input
                             id="input-text"
@@ -418,10 +420,13 @@ const App = () => {
                               width: "100px",
                               background: "none",
                               border: "none",
-                              transform: "scaleY(-0.9) scaleX(1) rotate(-40deg)",
+                              transform:
+                                "scaleY(-0.9) scaleX(1) rotate(-40deg)",
                             }}
                           >
-                            <span dangerouslySetInnerHTML={{ __html: svgContent }} />
+                            <span
+                              dangerouslySetInnerHTML={{ __html: svgContent }}
+                            />
                             {/* <span className="tooltip">Send</span> */}
                           </button>
                         </div>
@@ -430,7 +435,7 @@ const App = () => {
                     </div>
                   </div>
                 )}
-  
+
                 {activeComponent === "scientific" && (
                   <div className="Keyboard-wrapper">
                     <ScientificKeyboard
@@ -444,16 +449,21 @@ const App = () => {
                     />
                   </div>
                 )}
-  
+
                 {activeComponent === "math" && (
                   <div className="Keyboard-wrapper">
                     <div class="keyboard-primary-div">
-                      <h1 class="keyboard-head">Math Keyboard</h1>
                       <div class="para-wrap">
                         <p>{conVal}</p>
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginTop: "20px" }}>
-                        <div class="math-input-wrap">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {/* <div class="math-input-wrap">
                           <input
                             id="input-text"
                             type="text"
@@ -462,21 +472,40 @@ const App = () => {
                             onChange={handleInputChange}
                             onKeyDown={handleKeyDown}
                           />
-                          <button class="sendbutton-wrap" onClick={handleSubmit}>
-                            <span dangerouslySetInnerHTML={{ __html: svgContent }} />
+                          <button
+                            class="sendbutton-wrap"
+                            onClick={handleSubmit}
+                          >
+                            <span
+                              dangerouslySetInnerHTML={{ __html: svgContent }}
+                            />
                           </button>
                         </div>
-                      </div>
-                      <LatKeyboard handleKeyClick={handleKeyClick} />
+                      </div> 
+                      {/* <LatKeyboard handleKeyClick={handleKeyClick} /> */}
+                      
                     </div>
                   </div>
-                )}
-  
+                  </div>
+              )}
+              
+                <div className="math-field-div">
+                        <math-field
+                          ref={mf}
+                          onInput={(evt) => setValue(evt.target.value)}
+                        >
+                          {value}
+                        </math-field>
+                        <code>Value: {value}</code>
+                      </div>
+
                 <div style={{ textAlign: "center" }}>
                   {generations.map((generation, index) => (
                     <div key={index} style={{ marginTop: "10px" }}>
                       <div className="generation-text">{generation.prompt}</div>
-                      <div className="generation-text">{generation.response}</div>
+                      <div className="generation-text">
+                        {generation.response}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -487,8 +516,6 @@ const App = () => {
       )}
     </div>
   );
-  
-  
 };
 
 export default App;

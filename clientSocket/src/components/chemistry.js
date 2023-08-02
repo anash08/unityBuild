@@ -95,7 +95,7 @@ const ChemKeyboard = ({ handleKeyClick }) => {
 
     return (
         <div className="keyboard">
-            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            <div className = "latexkeyboard" style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {keys.map((key, index) => renderKey(key, index))}
             </div>
             <div>

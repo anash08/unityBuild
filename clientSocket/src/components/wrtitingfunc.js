@@ -23,6 +23,7 @@ import { QrReader } from "react-qr-reader";
 import undoIcon from "../undo-svgrepo-com.svg"; // Import the SVG image
 import redoIcon from "../redo-svgrepo-com.svg"; // Import
 
+import "../index.css";
 import "../App.css";
 import * as iink from "iink-js";
 
@@ -324,17 +325,16 @@ const ScientificKeyboard = ({
   return (
     <div>
       <div className="background" style={{ display: "-ms-flexbox" }}>
-        <h1 style={{ backgroundColor: "beige" }}>MATHKEYBOARD</h1>
 
-        <div
+        {/* <div
           id="codeDisplay"
           style={{ position: "absolute", top: 0, right: 0 }}
-        ></div>
-        <QRCode
+        ></div> */}
+        {/* <QRCode
           value={URL.toString()}
           size={128}
           style={{ position: "absolute", top: 0, right: 0 }}
-        />
+        /> */}
 
         <div
           id="result"
@@ -359,7 +359,7 @@ const ScientificKeyboard = ({
           )}
         </div>
       </div>
-      <div style={{ border: "10px solid black", padding: "10px" }}>
+      <div className="canvas-btn-div" style={{ padding: "10px" }}>
         <nav
           style={{
             width: "100%",
@@ -375,7 +375,6 @@ const ScientificKeyboard = ({
             <button
               id="clear"
               style={{
-                backgroundColor: "#0383be",
                 boxShadow: "0px 2px 4px rgba(0, 255, 255, 0.3)",
                 padding: "5px", // Reduce padding here to decrease the size of the button
                 border: "2px solid black",
@@ -383,7 +382,7 @@ const ScientificKeyboard = ({
                 alignItems: "center", // Align the icon vertically
                 justifyContent: "center", // Align the icon horizontally
               }}
-              className="glow-on-hover"
+              className="canvas-key-icon"
               disabled
             >
               <DeleteIcon style={{ width: "70%", height: "70%" }} />{" "}
@@ -392,7 +391,7 @@ const ScientificKeyboard = ({
 
             <button
               id="undo"
-              className="glow-on-hover"
+              className="canvas-key-icon"
               disabled
               style={{
                 backgroundColor: "#0383be",
@@ -409,10 +408,10 @@ const ScientificKeyboard = ({
             </button>
             <button
               id="redo"
-              className="glow-on-hover"
+              className="canvas-key-icon"
               disabled
               style={{
-                backgroundColor: "#0383be",
+                // backgroundColor: "#0383be",
                 boxShadow: "0px 2px 4px rgba(0, 255, 255, 0.3)",
                 padding: "3px",
                 border: "2px solid black",
@@ -431,10 +430,10 @@ const ScientificKeyboard = ({
             className="glow-on-hover"
             id="convert"
             style={{
-              backgroundColor: "#0383be",
-              boxShadow: "0px 2px 4px rgba(0, 255, 255, 0.3)",
-              padding: "10px", // Add padding here to increase the size of the button
-              border: "2px solid black",
+              // backgroundColor: "#0383be",
+              // boxShadow: "0px 2px 4px rgba(0, 255, 255, 0.3)",
+              // padding: "2px", // Add padding here to increase the size of the button
+              // border: "2px solid black",
             }}
             disabled
           >
@@ -445,16 +444,9 @@ const ScientificKeyboard = ({
 
       <div
         id="editor"
-        className="editor"
+        className="canvas-editor "
         style={{
-          marginTop: "20px",
-          padding: "10px",
-          color: "black",
-          height: "calc(100vh - 220px)",
-          width: "calc(100vw - 40px)", // Adjust the width based on your desired padding
-          maxWidth: "1000px", // Set a maximum width for the editor if needed
-          margin: "0 auto", // Center the editor horizontally
-          border: "2px solid black", // Add a border with desired styles
+         
         }}
       >
         <div
@@ -472,7 +464,6 @@ const ScientificKeyboard = ({
         <div
           className="Input-latex"
           style={{
-            backgroundColor: "grey",
             height: "10vh",
             fontSize: "36px",
             display: "flex",
@@ -490,11 +481,11 @@ const ScientificKeyboard = ({
             value={previousConvertedValues.join(" ")}
           />
           <button
+            className="canvas-key-icon"
             style={{
               fontSize: "36px",
               padding: "0 10px",
               marginLeft: "10px", // Add some space between the input and button
-              backgroundColor: "transparent", // Remove button background
               border: "none", // Remove button border
             }}
             onClick={handleSendButtonClick}
@@ -504,24 +495,9 @@ const ScientificKeyboard = ({
         </div>
 
         <h1 style={{ color: "grey" }}>Write Here:</h1>
+        
       </div>
-      <button
-        onClick={handleSend}
-        style={{
-          position: "absolute",
-          right: 0,
-          bottom: "-400px",
-
-          padding: "50px",
-          width: "250px", // Adjust the width as needed
-          background: "none",
-          border: "none",
-          transform: "  rotate(-40deg)", // Flip the icon vertically
-          float: "right",
-        }}
-      >
-        <span dangerouslySetInnerHTML={{ __html: svgContent }} />
-      </button>
+     
     </div>
   );
 };
